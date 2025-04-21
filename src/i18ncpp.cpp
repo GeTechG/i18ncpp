@@ -114,7 +114,7 @@ void I18N::setFallbackLocale(std::string_view locale) {
     fallbackLocale = std::string(locale);
 }
 
-std::string_view I18N::getLocale() const noexcept {
+std::string I18N::getLocale() const noexcept {
     return locales.empty() ? "" : locales[0];
 }
 
@@ -122,7 +122,7 @@ const std::vector<std::string>& I18N::getLocales() const noexcept {
     return locales;
 }
 
-std::string_view I18N::getFallbackLocale() const noexcept {
+std::string I18N::getFallbackLocale() const noexcept {
     return fallbackLocale;
 }
 

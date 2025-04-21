@@ -127,10 +127,10 @@ public:
 
     void setFallbackLocale(std::string_view locale);
 
-    std::string_view getLocale() const noexcept;
+    std::string getLocale() const noexcept;
     const std::vector<std::string>& getLocales() const noexcept;
 
-    std::string_view getFallbackLocale() const noexcept;
+    std::string getFallbackLocale() const noexcept;
 
     std::string translate(std::string_view key, const json& params = json::object());
     
