@@ -959,6 +959,17 @@ std::string I18N::formatDateWithConfig(std::string_view pattern, const std::tm* 
                         result.append(defaultConfig.short_month_names[timeinfo.tm_mon]);
                     }
                     break;
+                case 'I': { // %I - Hour (01-12)
+                    int hour12 = (timeinfo.tm_hour % 12);
+                    if (hour12 == 0) hour12 = 12;
+                    char buf[3];
+                    snprintf(buf, sizeof(buf), "%02d", hour12);
+                    result.append(buf);
+                    break;
+                }
+                case 'p': // %p - AM/PM marker
+                    result.append(timeinfo.tm_hour < 12 ? "AM" : "PM");
+                    break;
                 default: // Unknown format - keep as is
                     result.push_back('%');
                     result.push_back(formatChar);
