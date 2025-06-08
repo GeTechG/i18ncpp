@@ -18,6 +18,8 @@
 #include <sstream>
 #include <tuple>
 #include <type_traits>
+#include <algorithm>
+#include <cctype>
 
 namespace i18n {
 

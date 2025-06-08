@@ -160,11 +160,24 @@ json* I18N::getTranslationData(std::string_view key, std::string_view locale) {
     std::vector<std::string> path = dotSplit(key);
     json* node = &it->second;
     
-    for (const auto& part : path) {
-        if (!node->is_object() || !node->contains(part)) {
-            return nullptr;
+    for (const auto& part : path) {        
+        if (node->is_array()) {
+            try {
+                int index = std::stoi(part);
+                if (index < 0 || index >= static_cast<int>(node->size())) {
+                    return nullptr;
+                }
+                node = &(*node)[index];
+            } catch (const std::exception&) {
+                return nullptr;
+            }
+        } else {
+            // Handle object access
+            if (!node->is_object() || !node->contains(part)) {
+                return nullptr;
+            }
+            node = &(*node)[part];
         }
-        node = &(*node)[part];
     }
     
     return node;
@@ -184,11 +197,24 @@ const json* I18N::getTranslationData(std::string_view key, std::string_view loca
     std::vector<std::string> path = dotSplit(key);
     const json* node = &it->second;
     
-    for (const auto& part : path) {
-        if (!node->is_object() || !node->contains(part)) {
-            return nullptr;
+    for (const auto& part : path) {        
+        if (node->is_array()) {
+            try {
+                int index = std::stoi(part);
+                if (index < 0 || index >= static_cast<int>(node->size())) {
+                    return nullptr;
+                }
+                node = &(*node)[index];
+            } catch (const std::exception&) {
+                return nullptr;
+            }
+        } else {
+            // Handle object access
+            if (!node->is_object() || !node->contains(part)) {
+                return nullptr;
+            }
+            node = &(*node)[part];
         }
-        node = &(*node)[part];
     }
     
     return node;
