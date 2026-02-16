@@ -64,6 +64,53 @@ void I18N::loadLocaleFromFile(std::string_view filePath) {
     loadLocale(filename, filePath);
 }
 
+void I18N::mergeLocale(std::string_view locale, std::string_view filePath) {
+    std::ifstream fileStream(filePath.data());
+    if (!fileStream.is_open()) {
+        throw I18NError("Failed to open locale file: " + std::string(filePath));
+    }
+
+    try {
+        json data = json::parse(fileStream);
+        std::string localeStr(locale);
+
+        if (data.contains("_formats") && data["_formats"].is_object()) {
+            configure(data["_formats"]);
+            formatConfigs[localeStr] = defaultConfig;
+            data.erase("_formats");
+        }
+
+        auto it = localesData.find(localeStr);
+        if (it == localesData.end()) {
+            localesData[localeStr] = std::move(data);
+        } else {
+            it->second.merge_patch(data);
+        }
+    } catch (const json::parse_error& e) {
+        throw I18NError("Failed to parse JSON from file: " + std::string(filePath) + " - " + e.what());
+    }
+}
+
+void I18N::mergeLocaleFromFile(std::string_view filePath) {
+    std::string_view filename = filePath;
+
+    size_t lastSlash = filename.find_last_of("/\\");
+    if (lastSlash != std::string_view::npos) {
+        filename = filename.substr(lastSlash + 1);
+    }
+
+    size_t extensionPos = filename.find_last_of('.');
+    if (extensionPos != std::string_view::npos) {
+        filename = filename.substr(0, extensionPos);
+    }
+
+    if (filename.empty()) {
+        throw I18NError("Cannot extract locale from file name: " + std::string(filePath));
+    }
+
+    mergeLocale(filename, filePath);
+}
+
 void I18N::load(const json& data) {
     std::function<void(const std::string&, const json&)> recursiveLoad;
     recursiveLoad = [this, &recursiveLoad](const std::string& currentContext, const json& data) {

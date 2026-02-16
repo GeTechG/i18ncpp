@@ -119,8 +119,11 @@ public:
     I18N& operator=(I18N&&) noexcept = default;
 
     void loadLocaleFromFile(std::string_view filePath);
-    
     void loadLocale(std::string_view locale, std::string_view filePath);
+
+    // Merge new translations on top of existing locale data
+    void mergeLocaleFromFile(std::string_view filePath);
+    void mergeLocale(std::string_view locale, std::string_view filePath);
 
     void load(const json& data);
 
