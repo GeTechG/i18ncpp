@@ -1,0 +1,37 @@
+{
+    "greeting": "Hello",
+    "farewell": "Goodbye",
+    "welcome": "Welcome, {0}!",
+    "menu": {
+        "file": {
+            "open": "Open",
+            "save": "Save",
+            "close": "Close"
+        },
+        "edit": {
+            "copy": "Copy",
+            "paste": "Paste"
+        }
+    },
+    "items": ["Apple", "Banana", "Cherry"],
+    "only_in_en": "English only",
+    "deep": {
+        "nested": {
+            "key": "Deep value"
+        }
+    },
+    "items_plural": {
+        "one": "{0} item",
+        "other": "{0} items"
+    },
+    "items_in_cart": {
+        "one": "{0} item in {1}",
+        "other": "{0} items in {1}"
+    },
+    "welcome_pos": "Hello {0}, welcome to {1}",
+    "welcome_unnamed": "Hello {}, welcome to {}",
+    "welcome_named": "%{name} has arrived",
+    "score_fmt": "%<name>.s scored %<score>.d points",
+    "price_fmt": "Total: %<amount>.f",
+    "no_placeholders": "Plain text"
+}

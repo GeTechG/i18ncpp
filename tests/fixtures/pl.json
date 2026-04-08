@@ -1,0 +1,7 @@
+{
+    "items_plural": {
+        "one": "{0} przedmiot",
+        "few": "{0} przedmioty",
+        "many": "{0} przedmiotów"
+    }
+}

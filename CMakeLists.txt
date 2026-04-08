@@ -14,3 +14,9 @@ target_link_libraries(i18ncpp PRIVATE nlohmann_json)
 
 set_target_properties(i18ncpp PROPERTIES PUBLIC_HEADER "include/i18ncpp.h")
 install(TARGETS i18ncpp)
+
+option(BUILD_TESTS "Build tests" OFF)
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()

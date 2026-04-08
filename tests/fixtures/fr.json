@@ -1,0 +1,15 @@
+{
+    "greeting": "Bonjour",
+    "farewell": "Au revoir",
+    "welcome": "Bienvenue, {0} !",
+    "menu": {
+        "file": {
+            "open": "Ouvrir",
+            "save": "Enregistrer"
+        }
+    },
+    "items_plural": {
+        "one": "{0} élément",
+        "other": "{0} éléments"
+    }
+}

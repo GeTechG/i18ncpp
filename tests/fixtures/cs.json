@@ -1,0 +1,7 @@
+{
+    "items_plural": {
+        "one": "{0} položka",
+        "few": "{0} položky",
+        "other": "{0} položek"
+    }
+}
