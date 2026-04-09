@@ -272,75 +272,75 @@ std::string I18N::interpolate(std::string_view text, const json& params) const {
     }
     
     std::string result(text);
-    
+
     // Process templates like %{key}
-    std::string newResult;
-    newResult.reserve(result.size() * 1.5); // Reserve extra memory for optimization
-    
+    interpolateBuf_.clear();
+    interpolateBuf_.reserve(result.size() * 1.5);
+
     std::string::const_iterator searchStart(result.cbegin());
     std::smatch match;
     size_t lastPos = 0;
-    
+
     while (std::regex_search(searchStart, result.cend(), match, fieldPattern)) {
         // Add text before match
         size_t startPos = match.position() + (searchStart - result.cbegin());
-        newResult.append(result, lastPos, startPos - lastPos);
-        
+        interpolateBuf_.append(result, lastPos, startPos - lastPos);
+
         // Add previous character
         std::string prev = match[1].str();
-        newResult.append(prev);
-        
+        interpolateBuf_.append(prev);
+
         // Get key and replace with value if it exists
         std::string key = match[2].str();
         if (params.contains(key)) {
             json value = params[key];
             if (value.is_string()) {
-                newResult.append(value.get<std::string>());
+                interpolateBuf_.append(value.get<std::string>());
             } else if (value.is_number()) {
-                newResult.append(value.dump());
+                interpolateBuf_.append(value.dump());
             } else if (value.is_boolean()) {
-                newResult.append(value.get<bool>() ? "true" : "false");
+                interpolateBuf_.append(value.get<bool>() ? "true" : "false");
             } else {
                 // For other types, use JSON representation
-                newResult.append(value.dump());
+                interpolateBuf_.append(value.dump());
             }
         } else {
             // If key not found, keep template as is
-            newResult.append("%{").append(key).append("}");
+            interpolateBuf_.append("%{").append(key).append("}");
         }
-        
+
         // Update search position and last position
         searchStart += match.position() + match.length();
         lastPos = startPos + match.length();
     }
-    
+
     // Add remaining text
-    newResult.append(result, lastPos, std::string::npos);
-    
+    interpolateBuf_.append(result, lastPos, std::string::npos);
+
     // Process templates like %<key>.fmt
-    result = std::move(newResult);
-    newResult.clear();
-    newResult.reserve(result.size() * 1.5);
-    
+    result = std::move(interpolateBuf_);
+    interpolateBuf2_.clear();
+    interpolateBuf2_.reserve(result.size() * 1.5);
+
     lastPos = 0;
     searchStart = result.cbegin();
-    
+
     while (std::regex_search(searchStart, result.cend(), match, valuePattern)) {
         // Add text before match
         size_t startPos = match.position() + (searchStart - result.cbegin());
-        newResult.append(result, lastPos, startPos - lastPos);
-        
+        interpolateBuf2_.append(result, lastPos, startPos - lastPos);
+
         // Add previous character
         std::string prev = match[1].str();
-        newResult.append(prev);
-        
+        interpolateBuf2_.append(prev);
+
         // Get key and format
         std::string key = match[2].str();
         std::string format = match[3].str();
-        
+
         if (params.contains(key)) {
             json value = params[key];
-            
+
             std::ostringstream oss;
             if (format == "d" || format == "i") {
                 // Integer format
@@ -355,22 +355,22 @@ std::string I18N::interpolate(std::string_view text, const json& params) const {
                 // Other formats
                 oss << value.dump();
             }
-            
-            newResult.append(oss.str());
+
+            interpolateBuf2_.append(oss.str());
         } else {
             // If key not found, keep template as is
-            newResult.append("%<").append(key).append(">.").append(format);
+            interpolateBuf2_.append("%<").append(key).append(">.").append(format);
         }
-        
+
         // Update search position and last position
         searchStart += match.position() + match.length();
         lastPos = startPos + match.length();
     }
-    
+
     // Add remaining text
-    newResult.append(result, lastPos, std::string::npos);
-    
-    return newResult;
+    interpolateBuf2_.append(result, lastPos, std::string::npos);
+
+    return std::move(interpolateBuf2_);
 }
 
 std::string I18N::interpolateArray(std::string_view text, const std::vector<std::string>& params) const {
@@ -379,71 +379,71 @@ std::string I18N::interpolateArray(std::string_view text, const std::vector<std:
     }
     
     std::string result(text);
-    
+
     // First replace numbered placeholders {0}, {1}, {2}, ...
     std::string::const_iterator searchStart(result.cbegin());
     std::smatch match;
-    
-    std::string newResult;
-    newResult.reserve(result.size() * 1.5); // reserve extra memory
-    
+
+    interpolateBuf_.clear();
+    interpolateBuf_.reserve(result.size() * 1.5);
+
     size_t lastPos = 0;
-    
+
     while (std::regex_search(searchStart, result.cend(), match, indexPattern)) {
         // Add text before match
         size_t startPos = match.position() + (searchStart - result.cbegin());
-        newResult.append(result, lastPos, startPos - lastPos);
-        
+        interpolateBuf_.append(result, lastPos, startPos - lastPos);
+
         // Get parameter index
         int index = std::stoi(match[1].str());
-        
+
         // Substitute parameter with corresponding index if it exists
         if (index >= 0 && index < static_cast<int>(params.size())) {
-            newResult.append(params[index]);
+            interpolateBuf_.append(params[index]);
         } else {
             // If parameter with such index not found, keep placeholder
-            newResult.append(match[0].str());
+            interpolateBuf_.append(match[0].str());
         }
-        
+
         // Update positions for next search
         searchStart += match.position() + match.length();
         lastPos = startPos + match.length();
     }
-    
+
     // Add remaining text
-    newResult.append(result, lastPos, std::string::npos);
-    result = std::move(newResult);
-    
+    interpolateBuf_.append(result, lastPos, std::string::npos);
+    result = std::move(interpolateBuf_);
+
     // Now replace unnumbered placeholders {} with parameters in order
     searchStart = result.cbegin();
-    newResult.clear();
-    newResult.reserve(result.size() * 1.5);
-    
+    interpolateBuf2_.clear();
+    interpolateBuf2_.reserve(result.size() * 1.5);
+
     lastPos = 0;
     size_t paramIndex = 0; // Index of current parameter
-    
+
     while (std::regex_search(searchStart, result.cend(), match, emptyBracePattern)) {
         // Add text before match
         size_t startPos = match.position() + (searchStart - result.cbegin());
-        newResult.append(result, lastPos, startPos - lastPos);
-        
+        interpolateBuf2_.append(result, lastPos, startPos - lastPos);
+
         // If there are available parameters, substitute next one
         if (paramIndex < params.size()) {
-            newResult.append(params[paramIndex++]);
+            interpolateBuf2_.append(params[paramIndex++]);
         } else {
             // If parameters are exhausted, keep placeholder
-            newResult.append("{}");
+            interpolateBuf2_.append("{}");
         }
-        
+
         // Update positions for next search
         searchStart += match.position() + match.length();
         lastPos = startPos + match.length();
     }
-    
+
     // Add remaining text
-    newResult.append(result, lastPos, std::string::npos);
-    
-    return newResult;
+    interpolateBuf2_.append(result, lastPos, std::string::npos);
+
+    return std::move(interpolateBuf2_);
 }
 
 std::string I18N::getLocaleRoot(std::string_view locale) const {
@@ -721,11 +721,12 @@ std::string I18N::trPlural(std::string_view key, int count, const std::vector<st
 
     std::vector<std::string> fallbacks = getFallbacks(locales);
 
-    // Build extended params with count as first element
-    std::vector<std::string> extendedParams;
-    extendedParams.reserve(params.size() + 1);
-    extendedParams.push_back(std::to_string(count));
-    extendedParams.insert(extendedParams.end(), params.begin(), params.end());
+    // Build extended params with count as first element (reuse member buffer)
+    extendedParamsBuf_.clear();
+    extendedParamsBuf_.reserve(params.size() + 1);
+    extendedParamsBuf_.push_back(std::to_string(count));
+    extendedParamsBuf_.insert(extendedParamsBuf_.end(), params.begin(), params.end());
+    const auto& extendedParams = extendedParamsBuf_;
 
     std::string compositeKey;
     compositeKey.reserve(key.size() + 12);

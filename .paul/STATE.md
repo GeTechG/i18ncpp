@@ -5,28 +5,29 @@
 See: .paul/PROJECT.md (updated 2026-04-09)
 
 **Core value:** C++ developers can localize their applications with translation, pluralization, and locale-aware formatting — without heavy dependencies like ICU.
-**Current focus:** v0.3 Deep Performance — Phase 3: Allocation Optimization
+**Current focus:** v0.3 Deep Performance — Phase 4: Caching & Compile-time
 
 ## Current Position
 
 Milestone: v0.3 Deep Performance
-Phase: 3 of 5 (Allocation Optimization)
+Phase: 4 of 5 (Caching & Compile-time)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-04-09 — Phase 2 complete, transitioned to Phase 3
+Last activity: 2026-04-09 — Phase 3 complete, transitioned to Phase 4
 
 Progress:
-- v0.3 Deep Performance: [████░░░░░░] 40%
+- v0.3 Deep Performance: [██████░░░░] 60%
 - Phase 1: [██████████] 100% ✅
 - Phase 2: [██████████] 100% ✅
-- Phase 3: [░░░░░░░░░░] 0%
+- Phase 3: [██████████] 100% ✅
+- Phase 4: [░░░░░░░░░░] 0%
 
 ## Loop Position
 
 Current loop state:
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ○        ○        ○     [Ready for Phase 3 PLAN]
+  ○        ○        ○     [Ready for next PLAN]
 ```
 
 ## Accumulated Context
@@ -46,13 +47,15 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - Transparent hash deferred: C++17 unordered_map lacks heterogeneous find() — requires C++20
 - Dual flattenJson overloads: const for borrowed JSON, mutable for locally-parsed JSON (move semantics)
 - Composite key buffer pattern: assign+append reusable buffer instead of operator+ concatenation
+- Mutable member buffer pooling for interpolation (interpolateBuf_, interpolateBuf2_, extendedParamsBuf_)
+- Fold expression for argsToStrings: single-pass O(n) instead of recursive O(n^2)
 
 ### Deferred Issues
 - Default DateTimeConfig.long_date uses %B specifier which is unhandled in formatDateWithConfig — only %F maps to full month name.
 - Transparent hash for zero-alloc map lookup deferred to C++20 migration.
 
 ### Git State
-Last commit: 281ee26
+Last commit: c2c85c2 (uncommitted changes from 03-01 APPLY)
 Branch: master
 Feature branches merged: none
 
@@ -62,8 +65,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Phase 2 complete, ready to plan Phase 3
-Next action: /paul:plan for Phase 3
+Stopped at: Phase 3 complete, ready to plan Phase 4
+Next action: /paul:plan for Phase 4
 Resume file: .paul/ROADMAP.md
 
 ---

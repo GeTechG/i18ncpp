@@ -182,6 +182,9 @@ private:
     std::unordered_map<std::string, FormatConfig> formatConfigs;
     FormatConfig defaultConfig;
     mutable std::unordered_map<std::string, std::string> formatCache_;
+    mutable std::string interpolateBuf_;
+    mutable std::string interpolateBuf2_;
+    mutable std::vector<std::string> extendedParamsBuf_;
 
     // Helper functions
     void clearFormatCache();
@@ -230,18 +233,14 @@ private:
         }
     }
     
-    template<typename T>
-    std::vector<std::string> argsToStrings(const T& arg) const {
-        return { toString(arg) };
-    }
-    
-    template<typename T, typename... Args>
-    std::vector<std::string> argsToStrings(const T& first, const Args&... rest) const {
-        auto result = argsToStrings(rest...);
-        result.insert(result.begin(), toString(first));
+    template<typename... Args>
+    std::vector<std::string> argsToStrings(const Args&... args) const {
+        std::vector<std::string> result;
+        result.reserve(sizeof...(args));
+        (result.push_back(toString(args)), ...);
         return result;
     }
-    
+
     std::vector<std::string> argsToStrings() const {
         return {};
     }

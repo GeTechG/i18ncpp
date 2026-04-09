@@ -37,11 +37,11 @@ C++ developers can localize their applications with translation, pluralization, 
 - Benchmark suite with 18 micro-benchmarks for baseline performance measurement — v0.3 Phase 1
 - Move semantics for JSON string extraction in data loading (flattenJson mutable overload) — v0.3 Phase 2
 - Composite key buffer reuse in lookup hot paths (tr, trPlural, translate) — v0.3 Phase 2
+- Mutable member buffer pooling for interpolation (interpolateBuf_, interpolateBuf2_, extendedParamsBuf_) — v0.3 Phase 3
+- O(n) argsToStrings via C++17 fold expression (replaced O(n^2) recursive insert-at-begin) — v0.3 Phase 3
 
 ### Active (In Progress)
 - String view / zero-copy for key lookup (deferred: requires C++20 heterogeneous find)
-- Memory pooling for interpolation buffers
-- Small string optimization for short translations
 - Interpolation cache with invalidation
 - Compile-time constexpr key hashing
 
@@ -72,6 +72,8 @@ C++ developers can localize their applications with translation, pluralization, 
 | Formatting cache (mutable) | Cache formatNumber/Price/Date results; invalidate on locale/config change | 2026-04-09 | Active |
 | Transparent hash deferred | C++17 unordered_map lacks heterogeneous find(); deferred to C++20 migration | 2026-04-09 | Deferred |
 | Dual flattenJson overloads | const for borrowed JSON (load), mutable for owned JSON (loadLocale/mergeLocale) | 2026-04-09 | Active |
+| Mutable buffer pooling | Reuse interpolation buffers as mutable members; clear+reserve instead of local construction | 2026-04-09 | Active |
+| Fold expression for variadics | Single-pass O(n) parameter pack expansion replaces recursive O(n^2) insert-at-begin | 2026-04-09 | Active |
 
 ## Success Metrics
 
@@ -92,4 +94,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after v0.3 Phase 2 (Zero-copy & Move Semantics complete)*
+*Last updated: 2026-04-09 after v0.3 Phase 3 (Allocation Optimization complete)*
