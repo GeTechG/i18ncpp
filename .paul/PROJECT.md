@@ -13,8 +13,8 @@ C++ developers can localize their applications with translation, pluralization, 
 | Attribute | Value |
 |-----------|-------|
 | Type | Application (C++ library) |
-| Version | 0.3.0-dev |
-| Status | In Progress |
+| Version | 0.3.0 |
+| Status | Complete |
 | Last Updated | 2026-04-09 |
 
 ## Requirements

@@ -62,7 +62,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - Transparent hash for zero-alloc map lookup deferred to C++20 migration.
 
 ### Git State
-Last commit: 59ad548
+Last commit: 73b59b6
 Branch: master
 Feature branches merged: none
 
