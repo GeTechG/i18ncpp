@@ -8,14 +8,14 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 
 **v0.2 Performance & Reliability** (v0.2.0)
 Status: 🚧 In Progress
-Phases: 1 of 3 complete
+Phases: 2 of 3 complete
 
 ## Phases
 
 | Phase | Name | Plans | Status | Completed |
 |-------|------|-------|--------|-----------|
 | 1 | Tests | 3 (01-translation, 02-plural+interp, 03-formatting) | ✅ Complete | 2026-04-09 |
-| 2 | Flat Storage | TBD | Not started | - |
+| 2 | Flat Storage | 1 (02-01-flatten-and-lookup) | ✅ Complete | 2026-04-09 |
 | 3 | Formatting Cache | TBD | Not started | - |
 
 ## Phase Details
@@ -27,8 +27,8 @@ Plans: TBD (defined during /paul:plan)
 
 ### Phase 2: Flat Storage
 
-Focus: Replace nested JSON traversal with flat `unordered_map<string, string>` for O(1) lookup. Flatten at load/merge time.
-Plans: TBD (defined during /paul:plan)
+Focus: Replace nested JSON traversal with flat `unordered_map<string, json>` per locale for O(1) lookup. Flatten at load/merge time.
+Plans: 02-01 (flatten storage + O(1) lookup)
 
 ### Phase 3: Formatting Cache
 
@@ -41,4 +41,4 @@ Plans: TBD (defined during /paul:plan)
 Status: ✅ Complete (shipped)
 
 ---
-*Roadmap updated: 2026-04-09*
+*Roadmap updated: 2026-04-09 — Phase 2 complete*

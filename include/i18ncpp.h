@@ -176,27 +176,21 @@ public:
 private:
     std::vector<std::string> locales;
     std::string fallbackLocale;
-    std::unordered_map<std::string, json> localesData;
+    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> localesData;
     std::unordered_map<std::string, FormatConfig> formatConfigs;
     FormatConfig defaultConfig;
 
     // Helper functions
-    json* getTranslationData(std::string_view key, std::string_view locale);
-    const json* getTranslationData(std::string_view key, std::string_view locale) const;
-    std::string localizedTranslate(std::string_view key, std::string_view locale, const json& params = json::object()) const;
+    const std::string* getTranslationData(std::string_view key, std::string_view locale) const;
     
     std::string interpolate(std::string_view text, const json& params) const;
-    
+
     std::string interpolateArray(std::string_view text, const std::vector<std::string>& params) const;
-    
-    std::string handlePlural(const json& pluralData, std::string_view locale, const json& params) const;
-    std::string handlePluralWithArray(const json& pluralData, std::string_view locale, int count, const std::vector<std::string>& params) const;
+
     std::string getPluralForm(std::string_view locale, int count) const;
-    
-    std::string handleVariant(const json& variantData, const json& params) const;
-    
-    std::vector<std::string> dotSplit(std::string_view str) const;
-    
+
+    void flattenJson(const std::string& prefix, const json& node, std::unordered_map<std::string, std::string>& flatMap);
+
     std::vector<std::string> getLocaleAncestry(std::string_view locale) const;
     
     std::vector<std::string> getFallbacks(const std::vector<std::string>& locales) const;

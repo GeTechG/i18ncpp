@@ -32,13 +32,13 @@ C++ developers can localize their applications with translation, pluralization, 
 - Test coverage for interpolation (positional, unnamed, named, formatted) — Phase 1
 - Test coverage for formatting (number, currency, date/time with named and custom patterns) — Phase 1
 - Test coverage for locale management (merge, load-from-file, reset) — Phase 1
+- Flat storage with O(1) key lookup (replaced nested JSON traversal) — Phase 2
 
 ### Active (In Progress)
-- Sub-microsecond tr() performance (currently ~20-170us)
+- Formatting cache (Phase 3)
 
 ### Planned (Next)
-- Flat storage refactoring (Phase 2)
-- Formatting cache (Phase 3)
+- (none — Phase 3 is next)
 
 ### Out of Scope
 - ICU dependency
@@ -59,13 +59,15 @@ C++ developers can localize their applications with translation, pluralization, 
 | C++17 standard | Modern features without cutting-edge compiler requirements | 2026-04-09 | Active |
 | nlohmann/json for JSON | Widely used, header-only, well-tested | 2026-04-09 | Active |
 | CMake + Conan | Standard C++ build and package management | 2026-04-09 | Active |
+| Flat unordered_map storage | O(1) lookup vs O(depth) JSON traversal; plural/variant forms as composite keys | 2026-04-09 | Active |
+| Leaf object heuristic | Objects with all-string values are plural/variant forms, not namespace containers | 2026-04-09 | Active |
 
 ## Success Metrics
 
 | Metric | Target | Current | Status |
 |--------|--------|---------|--------|
 | Correctness | All translations resolve correctly | 75 tests passing | In progress |
-| Performance | Fast locale resolution and formatting | ~20-170us per tr() | Not started |
+| Performance | Fast locale resolution and formatting | O(1) hash lookup (flat storage) | In progress |
 
 ## Tech Stack / Tools
 
@@ -78,4 +80,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after Phase 1*
+*Last updated: 2026-04-09 after Phase 2*
