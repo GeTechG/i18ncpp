@@ -13,7 +13,7 @@ C++ developers can localize their applications with translation, pluralization, 
 | Attribute | Value |
 |-----------|-------|
 | Type | Application (C++ library) |
-| Version | 0.3.0 |
+| Version | 0.4.0 |
 | Status | Stable (v0.4 shipped) |
 | Last Updated | 2026-04-09 |
 

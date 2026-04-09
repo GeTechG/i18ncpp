@@ -9,22 +9,21 @@ See: .paul/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Milestone: v0.4 C++20 Modernization — Complete
-Phase: 4 of 4 (API Modernization) — Complete
-Plan: 04-01 complete
-Status: Milestone complete, ready for next milestone
-Last activity: 2026-04-09 — v0.4 milestone complete
+Milestone: Awaiting next milestone
+Phase: None active
+Plan: None
+Status: Milestone v0.4 C++20 Modernization complete — ready for next
+Last activity: 2026-04-09 — Milestone completed
 
 Progress:
-- v0.4 C++20 Modernization: [██████████] 100%
-- Phase 4: [██████████] 100%
+- v0.4 C++20 Modernization: [██████████] 100% ✓
 
 ## Loop Position
 
 Current loop state:
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ✓        ✓        ✓     [Loop complete — milestone finished]
+  ○        ○        ○     [Milestone complete - ready for next]
 ```
 
 ## Accumulated Context
@@ -45,7 +44,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 None.
 
 ### Git State
-Last commit: 68a8607
+Last commit: 3cca973
 Branch: master
 Feature branches merged: none
 
@@ -55,9 +54,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: v0.4 milestone complete
-Next action: /paul:discuss-milestone or /paul:milestone for next milestone
-Resume file: .paul/ROADMAP.md
+Stopped at: Milestone v0.4 C++20 Modernization complete
+Next action: /paul:discuss-milestone or /paul:milestone
+Resume file: .paul/MILESTONES.md
 
 ---
 *STATE.md — Updated after every significant action*

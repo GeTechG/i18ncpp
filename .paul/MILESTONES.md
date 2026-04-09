@@ -4,9 +4,44 @@ Completed milestone log for this project.
 
 | Milestone | Completed | Duration | Stats |
 |-----------|-----------|----------|-------|
+| v0.4 C++20 Modernization | 2026-04-09 | 1 day | 4 phases, 4 plans |
 | v0.3 Deep Performance | 2026-04-09 | 1 day | 6 phases, 6 plans |
 | v0.2 Performance & Reliability | Pre-tracking | — | 3 phases, 5 plans |
 | v0.1 Initial Release | Pre-tracking | — | — |
+
+---
+
+## v0.4 C++20 Modernization
+
+**Completed:** 2026-04-09
+**Duration:** 1 day (all 4 phases)
+
+### Stats
+
+| Metric | Value |
+|--------|-------|
+| Phases | 4 |
+| Plans | 4 |
+| Files changed | 6 |
+
+### Key Accomplishments
+
+- C++20 build migration with aggregate initialization fix for NumberConfig
+- StringHash/StringEqual transparent hash types enabling zero-allocation heterogeneous lookup on all 5 unordered_maps
+- std::format for cache key construction, constexpr sorted array for plural rule lookup (eliminates heap allocation)
+- %B date format specifier support fixing broken default long_date pattern
+- std::span replaces std::vector in tr/trPlural public API — zero-copy parameter passing
+- API surface simplified from 10 to 6 overloads; initializer_list convenience retained
+
+### Key Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| Explicit NumberConfig constructor | C++20 aggregate init rules changed — structs with user-declared special members need explicit constructors |
+| Single StringHash via string_view | std::hash<string_view> handles both string and string_view inputs uniformly |
+| Linear scan for plural rules | 32 entries — simpler than binary search, cache-friendly, zero overhead |
+| %B as %F alias | Standard strftime compatibility for full month name |
+| Keep initializer_list overloads | std::span can't bind brace-init directly in C++20 |
 
 ---
 
