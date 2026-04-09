@@ -6,34 +6,21 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 
 ## Current Milestone
 
-**v0.4 C++20 Modernization**
-Status: In Progress
-Phases: 3 of 4 complete
-
-| Phase | Name | Plans | Status | Completed |
-|-------|------|-------|--------|-----------|
-| 1 | C++20 Migration | 1/1 | ✅ Complete | 2026-04-09 |
-| 2 | Transparent Hash & Zero-Copy | 1/1 | ✅ Complete | 2026-04-09 |
-| 3 | Format & Constexpr | 1/1 | Complete | 2026-04-09 |
-| 4 | API Modernization | TBD | Not started | - |
-
-### Phase 1: C++20 Migration
-
-Focus: Switch CMake/Conan build configuration to C++20, verify compilation, fix compatibility issues
-
-### Phase 2: Transparent Hash & Zero-Copy
-
-Focus: Heterogeneous lookup for all unordered_maps, string_view key lookup — zero-allocation lookups
-
-### Phase 3: Format & Constexpr
-
-Focus: std::format for cache keys, constexpr plural rules, fix %B specifier in formatDateWithConfig
-
-### Phase 4: API Modernization
-
-Focus: std::span parameters, simplify tr/trPlural overloads, cleanup
+None — v0.4 complete. Next milestone TBD.
 
 ## Completed Milestones
+
+<details>
+<summary>v0.4 C++20 Modernization - 2026-04-09 (4 phases)</summary>
+
+| Phase | Name | Plans | Completed |
+|-------|------|-------|-----------|
+| 1 | C++20 Migration | 1/1 | 2026-04-09 |
+| 2 | Transparent Hash & Zero-Copy | 1/1 | 2026-04-09 |
+| 3 | Format & Constexpr | 1/1 | 2026-04-09 |
+| 4 | API Modernization | 1/1 | 2026-04-09 |
+
+</details>
 
 <details>
 <summary>v0.3 Deep Performance - 2026-04-09 (6 phases)</summary>
@@ -70,4 +57,4 @@ Shipped — initial implementation.
 </details>
 
 ---
-*Roadmap updated: 2026-04-09 — Phase 3 (Format & Constexpr) complete*
+*Roadmap updated: 2026-04-09 — v0.4 C++20 Modernization milestone complete*

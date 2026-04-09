@@ -20,7 +20,7 @@ protected:
 // --- Positional interpolation {0}, {1} ---
 
 TEST_F(InterpolationTest, PositionalTwoParams) {
-    EXPECT_EQ(i18n.tr("welcome_pos", "Alice", "Wonderland"),
+    EXPECT_EQ(i18n.tr("welcome_pos", {"Alice", "Wonderland"}),
               "Hello Alice, welcome to Wonderland");
 }
 
@@ -33,7 +33,7 @@ TEST_F(InterpolationTest, PositionalSingleParam) {
 // --- Unnamed interpolation {} ---
 
 TEST_F(InterpolationTest, UnnamedTwoParams) {
-    EXPECT_EQ(i18n.tr("welcome_unnamed", "Alice", "Wonderland"),
+    EXPECT_EQ(i18n.tr("welcome_unnamed", {"Alice", "Wonderland"}),
               "Hello Alice, welcome to Wonderland");
 }
 
@@ -87,5 +87,5 @@ TEST_F(InterpolationTest, NoPlaceholdersUnchanged) {
 }
 
 TEST_F(InterpolationTest, NoPlaceholdersWithParams) {
-    EXPECT_EQ(i18n.tr("no_placeholders", "ignored"), "Plain text");
+    EXPECT_EQ(i18n.tr("no_placeholders", {"ignored"}), "Plain text");
 }

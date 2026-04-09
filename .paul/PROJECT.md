@@ -14,7 +14,7 @@ C++ developers can localize their applications with translation, pluralization, 
 |-----------|-------|
 | Type | Application (C++ library) |
 | Version | 0.3.0 |
-| Status | Stable (v0.3 shipped) |
+| Status | Stable (v0.4 shipped) |
 | Last Updated | 2026-04-09 |
 
 ## Requirements
@@ -45,6 +45,7 @@ C++ developers can localize their applications with translation, pluralization, 
 - Manual parsers replace all std::regex patterns; `<regex>` dependency removed; InterpolateNamed 6740→489 ns/op (93% faster) — v0.3 Phase 6
 - Transparent hash (StringHash/StringEqual) with zero-allocation string_view lookups on all unordered_maps — v0.4 Phase 2
 - std::format for cache key construction, constexpr plural rule lookup, %B date specifier fix — v0.4 Phase 3
+- std::span parameters for tr/trPlural, simplified overload set (10→6), initializer_list convenience — v0.4 Phase 4
 
 ### Active (In Progress)
 - None
@@ -84,6 +85,8 @@ C++ developers can localize their applications with translation, pluralization, 
 | std::format for cache keys | Cleaner cache key construction; replaces manual string concatenation with std::to_string | 2026-04-09 | Active |
 | Constexpr plural rule lookup | static constexpr std::array replaces runtime unordered_map; eliminates heap allocation | 2026-04-09 | Active |
 | %B as %F alias | %B maps to full month name (standard strftime); fixes default long_date pattern | 2026-04-09 | Active |
+| std::span for tr/trPlural params | Zero-copy parameter passing from any contiguous container; replaces vector-only API | 2026-04-09 | Active |
+| Simplified overload set | Removed individual-param overloads (1/2/3 string args); initializer_list + trv cover all cases | 2026-04-09 | Active |
 
 ## Success Metrics
 
@@ -104,4 +107,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after Phase 3 (Format & Constexpr)*
+*Last updated: 2026-04-09 after Phase 4 (API Modernization) — v0.4 milestone complete*

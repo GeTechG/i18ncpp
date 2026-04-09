@@ -406,7 +406,7 @@ std::string I18N::interpolate(std::string_view text, const json& params) const {
     return std::move(interpolateBuf2_);
 }
 
-std::string I18N::interpolateArray(std::string_view text, const std::vector<std::string>& params) const {
+std::string I18N::interpolateArray(std::string_view text, std::span<const std::string> params) const {
     if (params.empty() || text.empty()) {
         return std::string(text);
     }
@@ -674,27 +674,14 @@ std::string I18N::translate(std::string_view key, const json& params) {
 }
 
 std::string I18N::tr(std::string_view key) const {
-    std::vector<std::string> empty;
-    return tr(key, empty);
-}
-
-std::string I18N::tr(std::string_view key, const std::string& param1) const {
-    return tr(key, std::vector<std::string>{param1});
-}
-
-std::string I18N::tr(std::string_view key, const std::string& param1, const std::string& param2) const {
-    return tr(key, std::vector<std::string>{param1, param2});
-}
-
-std::string I18N::tr(std::string_view key, const std::string& param1, const std::string& param2, const std::string& param3) const {
-    return tr(key, std::vector<std::string>{param1, param2, param3});
+    return tr(key, std::span<const std::string>{});
 }
 
 std::string I18N::tr(std::string_view key, std::initializer_list<std::string> params) const {
-    return tr(key, std::vector<std::string>(params));
+    return tr(key, std::span<const std::string>{params.begin(), params.size()});
 }
 
-std::string I18N::tr(std::string_view key, const std::vector<std::string>& params) const {
+std::string I18N::tr(std::string_view key, std::span<const std::string> params) const {
     if (key.empty()) {
         return "";
     }
@@ -739,19 +726,14 @@ std::string I18N::tr(std::string_view key, const std::vector<std::string>& param
 }
 
 std::string I18N::trPlural(std::string_view key, int count) const {
-    std::vector<std::string> empty;
-    return trPlural(key, count, empty);
+    return trPlural(key, count, std::span<const std::string>{});
 }
 
-std::string I18N::trPlural(std::string_view key, int count, const std::string& param1) const {
-    return trPlural(key, count, std::vector<std::string>{param1});
+std::string I18N::trPlural(std::string_view key, int count, std::initializer_list<std::string> params) const {
+    return trPlural(key, count, std::span<const std::string>{params.begin(), params.size()});
 }
 
-std::string I18N::trPlural(std::string_view key, int count, const std::string& param1, const std::string& param2) const {
-    return trPlural(key, count, std::vector<std::string>{param1, param2});
-}
-
-std::string I18N::trPlural(std::string_view key, int count, const std::vector<std::string>& params) const {
+std::string I18N::trPlural(std::string_view key, int count, std::span<const std::string> params) const {
     if (key.empty()) {
         return "";
     }

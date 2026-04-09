@@ -18,12 +18,12 @@ int main() {
 
     // BM_InterpolatePositional: single positional param {0}
     results.push_back(bench::run_benchmark("InterpolatePositional", ITERATIONS, [&]() {
-        volatile auto r = i18n.tr("welcome", "Alice");
+        volatile auto r = i18n.tr("welcome", {"Alice"});
     }));
 
     // BM_InterpolateTwoParams: two positional params {0}, {1}
     results.push_back(bench::run_benchmark("InterpolateTwoParams", ITERATIONS, [&]() {
-        volatile auto r = i18n.tr("welcome_pos", "Alice", "Wonderland");
+        volatile auto r = i18n.tr("welcome_pos", {"Alice", "Wonderland"});
     }));
 
     // BM_InterpolateNamed: named params %{key}
@@ -35,7 +35,7 @@ int main() {
 
     // BM_InterpolatePluralWithParam: trPlural with extra params
     results.push_back(bench::run_benchmark("PluralWithParam", ITERATIONS, [&]() {
-        volatile auto r = i18n.trPlural("items_in_cart", 3, "cart");
+        volatile auto r = i18n.trPlural("items_in_cart", 3, {"cart"});
     }));
 
     // BM_NoPlaceholders: translation with no interpolation

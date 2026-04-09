@@ -154,8 +154,8 @@ TEST_F(PluralTest, ArabicOther) {
 
 TEST_F(PluralTest, PluralWithExtraParams) {
     i18n.setLocale("en");
-    EXPECT_EQ(i18n.trPlural("items_in_cart", 3, std::string("cart")), "3 items in cart");
-    EXPECT_EQ(i18n.trPlural("items_in_cart", 1, std::string("bag")), "1 item in bag");
+    EXPECT_EQ(i18n.trPlural("items_in_cart", 3, {"cart"}), "3 items in cart");
+    EXPECT_EQ(i18n.trPlural("items_in_cart", 1, {"bag"}), "1 item in bag");
 }
 
 // --- Fallback to "other" when specific form missing ---

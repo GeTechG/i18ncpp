@@ -13,6 +13,7 @@
 #include <optional>
 #include <memory>
 #include <initializer_list>
+#include <span>
 #include <nlohmann/json.hpp>
 #include <sstream>
 #include <tuple>
@@ -161,11 +162,8 @@ public:
     std::string translate(std::string_view key, const json& params = json::object());
     
     std::string tr(std::string_view key) const;
-    std::string tr(std::string_view key, const std::string& param1) const;
-    std::string tr(std::string_view key, const std::string& param1, const std::string& param2) const;
-    std::string tr(std::string_view key, const std::string& param1, const std::string& param2, const std::string& param3) const;
+    std::string tr(std::string_view key, std::span<const std::string> params) const;
     std::string tr(std::string_view key, std::initializer_list<std::string> params) const;
-    std::string tr(std::string_view key, const std::vector<std::string>& params) const;
     
     template<typename... Args>
     std::string trv(std::string_view key, const Args&... args) const {
@@ -173,9 +171,8 @@ public:
     }
     
     std::string trPlural(std::string_view key, int count) const;
-    std::string trPlural(std::string_view key, int count, const std::string& param1) const;
-    std::string trPlural(std::string_view key, int count, const std::string& param1, const std::string& param2) const;
-    std::string trPlural(std::string_view key, int count, const std::vector<std::string>& params) const;
+    std::string trPlural(std::string_view key, int count, std::span<const std::string> params) const;
+    std::string trPlural(std::string_view key, int count, std::initializer_list<std::string> params) const;
     
     template<typename... Args>
     std::string trPluralv(std::string_view key, int count, const Args&... args) const {
@@ -216,7 +213,7 @@ private:
     
     std::string interpolate(std::string_view text, const json& params) const;
 
-    std::string interpolateArray(std::string_view text, const std::vector<std::string>& params) const;
+    std::string interpolateArray(std::string_view text, std::span<const std::string> params) const;
 
     std::string getPluralForm(std::string_view locale, int count) const;
 
