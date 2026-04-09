@@ -8,12 +8,12 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 
 **v0.4 C++20 Modernization**
 Status: In Progress
-Phases: 1 of 4 complete
+Phases: 2 of 4 complete
 
 | Phase | Name | Plans | Status | Completed |
 |-------|------|-------|--------|-----------|
 | 1 | C++20 Migration | 1/1 | ✅ Complete | 2026-04-09 |
-| 2 | Transparent Hash & Zero-Copy | TBD | Not started | - |
+| 2 | Transparent Hash & Zero-Copy | 1/1 | ✅ Complete | 2026-04-09 |
 | 3 | Format & Constexpr | TBD | Not started | - |
 | 4 | API Modernization | TBD | Not started | - |
 
@@ -70,4 +70,4 @@ Shipped — initial implementation.
 </details>
 
 ---
-*Roadmap updated: 2026-04-09 — Phase 1 (C++20 Migration) complete*
+*Roadmap updated: 2026-04-09 — Phase 2 (Transparent Hash & Zero-Copy) complete*

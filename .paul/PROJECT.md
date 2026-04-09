@@ -43,12 +43,13 @@ C++ developers can localize their applications with translation, pluralization, 
 - Translation result cache for tr/trPlural with automatic invalidation on mutation — v0.3 Phase 4
 - Profiling & validation: all optimizations measured, 87-96% lookup/interpolation improvement confirmed — v0.3 Phase 5
 - Manual parsers replace all std::regex patterns; `<regex>` dependency removed; InterpolateNamed 6740→489 ns/op (93% faster) — v0.3 Phase 6
+- Transparent hash (StringHash/StringEqual) with zero-allocation string_view lookups on all unordered_maps — v0.4 Phase 2
 
 ### Active (In Progress)
 - None
 
 ### Planned (Next)
-- String view / zero-copy for key lookup (requires C++20 heterogeneous find)
+- None
 
 ### Out of Scope
 - ICU dependency
@@ -72,7 +73,7 @@ C++ developers can localize their applications with translation, pluralization, 
 | Flat unordered_map storage | O(1) lookup vs O(depth) JSON traversal; plural/variant forms as composite keys | 2026-04-09 | Active |
 | Leaf object heuristic | Objects with all-string values are plural/variant forms, not namespace containers | 2026-04-09 | Active |
 | Formatting cache (mutable) | Cache formatNumber/Price/Date results; invalidate on locale/config change | 2026-04-09 | Active |
-| Transparent hash deferred | C++17 unordered_map lacks heterogeneous find(); deferred to C++20 migration | 2026-04-09 | Unblocked |
+| Transparent hash implemented | StringHash/StringEqual with is_transparent enable zero-allocation find() on all maps | 2026-04-09 | Active |
 | NumberConfig explicit constructor | C++20 aggregate init rules require explicit parameterized constructor for structs with user-declared special members | 2026-04-09 | Active |
 | Dual flattenJson overloads | const for borrowed JSON (load), mutable for owned JSON (loadLocale/mergeLocale) | 2026-04-09 | Active |
 | Mutable buffer pooling | Reuse interpolation buffers as mutable members; clear+reserve instead of local construction | 2026-04-09 | Active |
@@ -99,4 +100,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after Phase 1 (C++20 Migration)*
+*Last updated: 2026-04-09 after Phase 2 (Transparent Hash & Zero-Copy)*

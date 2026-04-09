@@ -24,6 +24,23 @@ namespace i18n {
 
 using json = nlohmann::json;
 
+struct StringHash {
+    using is_transparent = void;
+    size_t operator()(std::string_view sv) const noexcept {
+        return std::hash<std::string_view>{}(sv);
+    }
+    size_t operator()(const std::string& s) const noexcept {
+        return std::hash<std::string_view>{}(std::string_view(s));
+    }
+};
+
+struct StringEqual {
+    using is_transparent = void;
+    bool operator()(std::string_view a, std::string_view b) const noexcept {
+        return a == b;
+    }
+};
+
 class I18NError : public std::runtime_error {
 public:
     using std::runtime_error::runtime_error;
@@ -183,11 +200,11 @@ public:
 private:
     std::vector<std::string> locales;
     std::string fallbackLocale;
-    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> localesData;
-    std::unordered_map<std::string, FormatConfig> formatConfigs;
+    std::unordered_map<std::string, std::unordered_map<std::string, std::string, StringHash, StringEqual>, StringHash, StringEqual> localesData;
+    std::unordered_map<std::string, FormatConfig, StringHash, StringEqual> formatConfigs;
     FormatConfig defaultConfig;
-    mutable std::unordered_map<std::string, std::string> formatCache_;
-    mutable std::unordered_map<std::string, std::string> translationCache_;
+    mutable std::unordered_map<std::string, std::string, StringHash, StringEqual> formatCache_;
+    mutable std::unordered_map<std::string, std::string, StringHash, StringEqual> translationCache_;
     mutable std::string interpolateBuf_;
     mutable std::string interpolateBuf2_;
     mutable std::vector<std::string> extendedParamsBuf_;
@@ -203,8 +220,8 @@ private:
 
     std::string getPluralForm(std::string_view locale, int count) const;
 
-    void flattenJson(const std::string& prefix, const json& node, std::unordered_map<std::string, std::string>& flatMap);
-    void flattenJson(const std::string& prefix, json&& node, std::unordered_map<std::string, std::string>& flatMap);
+    void flattenJson(const std::string& prefix, const json& node, std::unordered_map<std::string, std::string, StringHash, StringEqual>& flatMap);
+    void flattenJson(const std::string& prefix, json&& node, std::unordered_map<std::string, std::string, StringHash, StringEqual>& flatMap);
 
     std::vector<std::string> getLocaleAncestry(std::string_view locale) const;
     

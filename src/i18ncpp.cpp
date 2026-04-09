@@ -93,7 +93,7 @@ void I18N::mergeLocale(std::string_view locale, std::string_view filePath) {
         }
 
         // Flatten into temporary map and merge into existing
-        std::unordered_map<std::string, std::string> tempFlat;
+        std::unordered_map<std::string, std::string, StringHash, StringEqual> tempFlat;
         flattenJson("", std::move(data), tempFlat);
         for (auto& [k, v] : tempFlat) {
             localesData[localeStr][std::move(k)] = std::move(v);
@@ -184,7 +184,7 @@ std::string I18N::getFallbackLocale() const noexcept {
     return fallbackLocale;
 }
 
-void I18N::flattenJson(const std::string& prefix, const json& node, std::unordered_map<std::string, std::string>& flatMap) {
+void I18N::flattenJson(const std::string& prefix, const json& node, std::unordered_map<std::string, std::string, StringHash, StringEqual>& flatMap) {
     for (auto it = node.begin(); it != node.end(); ++it) {
         if (it.key() == "_formats") continue;
 
@@ -220,7 +220,7 @@ void I18N::flattenJson(const std::string& prefix, const json& node, std::unorder
     }
 }
 
-void I18N::flattenJson(const std::string& prefix, json&& node, std::unordered_map<std::string, std::string>& flatMap) {
+void I18N::flattenJson(const std::string& prefix, json&& node, std::unordered_map<std::string, std::string, StringHash, StringEqual>& flatMap) {
     for (auto it = node.begin(); it != node.end(); ++it) {
         if (it.key() == "_formats") continue;
 
@@ -259,14 +259,12 @@ const std::string* I18N::getTranslationData(std::string_view key, std::string_vi
         return nullptr;
     }
 
-    std::string localeStr(locale);
-    auto localeIt = localesData.find(localeStr);
+    auto localeIt = localesData.find(locale);
     if (localeIt == localesData.end()) {
         return nullptr;
     }
 
-    std::string keyStr(key);
-    auto keyIt = localeIt->second.find(keyStr);
+    auto keyIt = localeIt->second.find(key);
     if (keyIt == localeIt->second.end()) {
         return nullptr;
     }

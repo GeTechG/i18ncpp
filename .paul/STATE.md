@@ -5,26 +5,26 @@
 See: .paul/PROJECT.md (updated 2026-04-09)
 
 **Core value:** C++ developers can localize their applications with translation, pluralization, and locale-aware formatting — without heavy dependencies like ICU.
-**Current focus:** v0.4 C++20 Modernization
+**Current focus:** v0.4 Phase 3 — Format & Constexpr
 
 ## Current Position
 
 Milestone: v0.4 C++20 Modernization
-Phase: 2 of 4 (Transparent Hash & Zero-Copy)
+Phase: 3 of 4 (Format & Constexpr)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-04-09 — Phase 1 complete, transitioned to Phase 2
+Last activity: 2026-04-09 — Phase 2 complete, transitioned to Phase 3
 
 Progress:
-- v0.4 C++20 Modernization: [██░░░░░░░░] 25%
-- Phase 2: [░░░░░░░░░░] 0%
+- v0.4 C++20 Modernization: [█████░░░░░] 50%
+- Phase 2: [██████████] 100%
 
 ## Loop Position
 
 Current loop state:
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ○        ○        ○     [Ready for Phase 2 planning]
+  ○        ○        ○     [Ready for Phase 3 planning]
 ```
 
 ## Accumulated Context
@@ -53,10 +53,9 @@ PLAN ──▶ APPLY ──▶ UNIFY
 
 ### Deferred Issues
 - Default DateTimeConfig.long_date uses %B specifier which is unhandled in formatDateWithConfig — only %F maps to full month name.
-- Transparent hash for zero-alloc map lookup deferred to C++20 migration.
 
 ### Git State
-Last commit: 73b59b6
+Last commit: b22e309
 Branch: master
 Feature branches merged: none
 
@@ -66,8 +65,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Phase 1 complete, transitioned to Phase 2
-Next action: /paul:plan for Phase 2 (Transparent Hash & Zero-Copy)
+Stopped at: Phase 2 complete, transitioned to Phase 3
+Next action: /paul:plan for Phase 3
 Resume file: .paul/ROADMAP.md
 
 ---
