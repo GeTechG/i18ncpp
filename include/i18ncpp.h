@@ -23,20 +23,6 @@
 
 namespace i18n {
 
-// Constexpr FNV-1a hash for compile-time key hashing
-constexpr std::size_t hash(const char* str, std::size_t basis = 14695981039346656037ULL) noexcept {
-    return (*str == '\0') ? basis : hash(str + 1, (basis ^ static_cast<std::size_t>(*str)) * 1099511628211ULL);
-}
-
-constexpr std::size_t hash(std::string_view sv) noexcept {
-    std::size_t h = 14695981039346656037ULL;
-    for (char c : sv)
-        h = (h ^ static_cast<std::size_t>(c)) * 1099511628211ULL;
-    return h;
-}
-
-static_assert(hash("test") != 0, "FNV-1a hash must compute at compile time");
-
 using json = nlohmann::json;
 
 class I18NError : public std::runtime_error {

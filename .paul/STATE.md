@@ -51,14 +51,13 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - Mutable member buffer pooling for interpolation (interpolateBuf_, interpolateBuf2_, extendedParamsBuf_)
 - Fold expression for argsToStrings: single-pass O(n) instead of recursive O(n^2)
 - Translation result cache: mutable unordered_map for tr/trPlural results, null-byte-separated cache keys
-- Constexpr FNV-1a hash utility: compile-time key hashing, deferred internal map usage to C++20
 
 ### Deferred Issues
 - Default DateTimeConfig.long_date uses %B specifier which is unhandled in formatDateWithConfig — only %F maps to full month name.
 - Transparent hash for zero-alloc map lookup deferred to C++20 migration.
 
 ### Git State
-Last commit: 1cd0c84
+Last commit: 4c6bfb5
 Branch: master
 Feature branches merged: none
 

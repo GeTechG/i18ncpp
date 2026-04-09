@@ -40,7 +40,6 @@ C++ developers can localize their applications with translation, pluralization, 
 - Mutable member buffer pooling for interpolation (interpolateBuf_, interpolateBuf2_, extendedParamsBuf_) — v0.3 Phase 3
 - O(n) argsToStrings via C++17 fold expression (replaced O(n^2) recursive insert-at-begin) — v0.3 Phase 3
 - Translation result cache for tr/trPlural with automatic invalidation on mutation — v0.3 Phase 4
-- Constexpr FNV-1a hash utility for compile-time key hashing — v0.3 Phase 4
 
 ### Active (In Progress)
 - String view / zero-copy for key lookup (deferred: requires C++20 heterogeneous find)
@@ -75,7 +74,6 @@ C++ developers can localize their applications with translation, pluralization, 
 | Mutable buffer pooling | Reuse interpolation buffers as mutable members; clear+reserve instead of local construction | 2026-04-09 | Active |
 | Fold expression for variadics | Single-pass O(n) parameter pack expansion replaces recursive O(n^2) insert-at-begin | 2026-04-09 | Active |
 | Translation result cache | Cache tr/trPlural results keyed by null-byte-separated key+params; invalidate on all mutation paths | 2026-04-09 | Active |
-| Constexpr FNV-1a hash | Header-only compile-time hash for keys; deferred internal map usage to C++20 | 2026-04-09 | Active |
 
 ## Success Metrics
 
