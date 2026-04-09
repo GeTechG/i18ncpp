@@ -14,7 +14,7 @@ C++ developers can localize their applications with translation, pluralization, 
 |-----------|-------|
 | Type | Application (C++ library) |
 | Version | 0.3.0 |
-| Status | Complete |
+| Status | Stable (v0.3 shipped) |
 | Last Updated | 2026-04-09 |
 
 ## Requirements
@@ -44,10 +44,10 @@ C++ developers can localize their applications with translation, pluralization, 
 - Manual parsers replace all std::regex patterns; `<regex>` dependency removed; InterpolateNamed 6740→489 ns/op (93% faster) — v0.3 Phase 6
 
 ### Active (In Progress)
-- String view / zero-copy for key lookup (deferred: requires C++20 heterogeneous find)
+- None
 
 ### Planned (Next)
-- None (v0.3 complete)
+- String view / zero-copy for key lookup (requires C++20 heterogeneous find)
 
 ### Out of Scope
 - ICU dependency
@@ -97,4 +97,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after v0.3 Phase 6 (Regex Replacement complete — v0.3 milestone complete)*
+*Last updated: 2026-04-09 — v0.3 Deep Performance milestone complete*
