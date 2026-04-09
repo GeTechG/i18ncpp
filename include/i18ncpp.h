@@ -23,6 +23,20 @@
 
 namespace i18n {
 
+// Constexpr FNV-1a hash for compile-time key hashing
+constexpr std::size_t hash(const char* str, std::size_t basis = 14695981039346656037ULL) noexcept {
+    return (*str == '\0') ? basis : hash(str + 1, (basis ^ static_cast<std::size_t>(*str)) * 1099511628211ULL);
+}
+
+constexpr std::size_t hash(std::string_view sv) noexcept {
+    std::size_t h = 14695981039346656037ULL;
+    for (char c : sv)
+        h = (h ^ static_cast<std::size_t>(c)) * 1099511628211ULL;
+    return h;
+}
+
+static_assert(hash("test") != 0, "FNV-1a hash must compute at compile time");
+
 using json = nlohmann::json;
 
 class I18NError : public std::runtime_error {
@@ -174,6 +188,7 @@ public:
     void reset();
 
     size_t formatCacheSize() const noexcept;
+    size_t translationCacheSize() const noexcept;
 
 private:
     std::vector<std::string> locales;
@@ -182,12 +197,14 @@ private:
     std::unordered_map<std::string, FormatConfig> formatConfigs;
     FormatConfig defaultConfig;
     mutable std::unordered_map<std::string, std::string> formatCache_;
+    mutable std::unordered_map<std::string, std::string> translationCache_;
     mutable std::string interpolateBuf_;
     mutable std::string interpolateBuf2_;
     mutable std::vector<std::string> extendedParamsBuf_;
 
     // Helper functions
     void clearFormatCache();
+    void clearTranslationCache();
     const std::string* getTranslationData(std::string_view key, std::string_view locale) const;
     
     std::string interpolate(std::string_view text, const json& params) const;

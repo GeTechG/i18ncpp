@@ -8,7 +8,7 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 
 **v0.3 Deep Performance** (v0.3.0)
 Status: In Progress
-Phases: 3 of 5 complete
+Phases: 4 of 5 complete
 
 ## Phases
 
@@ -17,7 +17,7 @@ Phases: 3 of 5 complete
 | 1 | Benchmarks | 1 (01-01-benchmarks) | Complete | 2026-04-09 |
 | 2 | Zero-copy & Move Semantics | 1 (02-01) | Complete | 2026-04-09 |
 | 3 | Allocation Optimization | 1 (03-01) | Complete | 2026-04-09 |
-| 4 | Caching & Compile-time | TBD | Not started | - |
+| 4 | Caching & Compile-time | 1 (04-01) | Complete | 2026-04-09 |
 | 5 | Profiling & Validation | TBD | Not started | - |
 
 ## Phase Details
@@ -60,4 +60,4 @@ Phases: 3 of 3 complete
 Status: Complete (shipped)
 
 ---
-*Roadmap updated: 2026-04-09 — Phase 3 (Allocation Optimization) complete*
+*Roadmap updated: 2026-04-09 — Phase 4 (Caching & Compile-time) complete*

@@ -26,8 +26,16 @@ void I18N::clearFormatCache() {
     formatCache_.clear();
 }
 
+void I18N::clearTranslationCache() {
+    translationCache_.clear();
+}
+
 size_t I18N::formatCacheSize() const noexcept {
     return formatCache_.size();
+}
+
+size_t I18N::translationCacheSize() const noexcept {
+    return translationCache_.size();
 }
 
 void I18N::loadLocale(std::string_view locale, std::string_view filePath) {
@@ -49,6 +57,7 @@ void I18N::loadLocale(std::string_view locale, std::string_view filePath) {
         localesData[localeStr].clear();
         flattenJson("", std::move(data), localesData[localeStr]);
         clearFormatCache();
+        clearTranslationCache();
     } catch (const json::parse_error& e) {
         throw I18NError("Failed to parse JSON from file: " + std::string(filePath) + " - " + e.what());
     }
@@ -96,6 +105,7 @@ void I18N::mergeLocale(std::string_view locale, std::string_view filePath) {
             localesData[localeStr][std::move(k)] = std::move(v);
         }
         clearFormatCache();
+        clearTranslationCache();
     } catch (const json::parse_error& e) {
         throw I18NError("Failed to parse JSON from file: " + std::string(filePath) + " - " + e.what());
     }
@@ -136,6 +146,7 @@ void I18N::load(const json& data) {
         flattenJson("", it.value(), localesData[localeStr]);
     }
     clearFormatCache();
+    clearTranslationCache();
 }
 
 void I18N::setLocale(std::string_view locale) {
@@ -148,6 +159,7 @@ void I18N::setLocale(std::string_view locale) {
         defaultConfig = it->second;
     }
     clearFormatCache();
+    clearTranslationCache();
 }
 
 void I18N::setLocale(const std::vector<std::string>& newLocales) {
@@ -157,11 +169,13 @@ void I18N::setLocale(const std::vector<std::string>& newLocales) {
         defaultConfig = formatConfigs[locales[0]];
     }
     clearFormatCache();
+    clearTranslationCache();
 }
 
 void I18N::setFallbackLocale(std::string_view locale) {
     fallbackLocale = std::string(locale);
     clearFormatCache();
+    clearTranslationCache();
 }
 
 std::string I18N::getLocale() const noexcept {
@@ -680,6 +694,20 @@ std::string I18N::tr(std::string_view key, const std::vector<std::string>& param
         return "";
     }
 
+    // Build cache key: key \0 param1 \0 param2 ...
+    std::string cacheKey;
+    cacheKey.reserve(key.size() + params.size() * 8);
+    cacheKey.append(key);
+    for (const auto& p : params) {
+        cacheKey.push_back('\0');
+        cacheKey.append(p);
+    }
+
+    auto cacheIt = translationCache_.find(cacheKey);
+    if (cacheIt != translationCache_.end()) {
+        return cacheIt->second;
+    }
+
     std::vector<std::string> fallbacks = getFallbacks(locales);
     std::string compositeKey;
     compositeKey.reserve(key.size() + 8);
@@ -687,14 +715,18 @@ std::string I18N::tr(std::string_view key, const std::vector<std::string>& param
     for (const auto& loc : fallbacks) {
         const std::string* val = getTranslationData(key, loc);
         if (val) {
-            return interpolateArray(*val, params);
+            std::string result = interpolateArray(*val, params);
+            translationCache_[std::move(cacheKey)] = result;
+            return result;
         }
         // Fallback: try key.other (for plural keys called without count)
         compositeKey.assign(key);
         compositeKey.append(".other");
         val = getTranslationData(compositeKey, loc);
         if (val) {
-            return interpolateArray(*val, params);
+            std::string result = interpolateArray(*val, params);
+            translationCache_[std::move(cacheKey)] = result;
+            return result;
         }
     }
 
@@ -719,12 +751,29 @@ std::string I18N::trPlural(std::string_view key, int count, const std::vector<st
         return "";
     }
 
+    // Build cache key: key \0P\0 count \0 param1 \0 param2 ...
+    std::string countStr = std::to_string(count);
+    std::string cacheKey;
+    cacheKey.reserve(key.size() + countStr.size() + params.size() * 8 + 4);
+    cacheKey.append(key);
+    cacheKey.append("\0P\0", 3);
+    cacheKey.append(countStr);
+    for (const auto& p : params) {
+        cacheKey.push_back('\0');
+        cacheKey.append(p);
+    }
+
+    auto cacheIt = translationCache_.find(cacheKey);
+    if (cacheIt != translationCache_.end()) {
+        return cacheIt->second;
+    }
+
     std::vector<std::string> fallbacks = getFallbacks(locales);
 
     // Build extended params with count as first element (reuse member buffer)
     extendedParamsBuf_.clear();
     extendedParamsBuf_.reserve(params.size() + 1);
-    extendedParamsBuf_.push_back(std::to_string(count));
+    extendedParamsBuf_.push_back(countStr);
     extendedParamsBuf_.insert(extendedParamsBuf_.end(), params.begin(), params.end());
     const auto& extendedParams = extendedParamsBuf_;
 
@@ -739,24 +788,40 @@ std::string I18N::trPlural(std::string_view key, int count, const std::vector<st
         compositeKey.push_back('.');
         compositeKey.append(pluralForm);
         const std::string* val = getTranslationData(compositeKey, loc);
-        if (val) return interpolateArray(*val, extendedParams);
+        if (val) {
+            std::string result = interpolateArray(*val, extendedParams);
+            translationCache_[std::move(cacheKey)] = result;
+            return result;
+        }
 
         // Fallback to "other"
         compositeKey.assign(key);
         compositeKey.append(".other");
         val = getTranslationData(compositeKey, loc);
-        if (val) return interpolateArray(*val, extendedParams);
+        if (val) {
+            std::string result = interpolateArray(*val, extendedParams);
+            translationCache_[std::move(cacheKey)] = result;
+            return result;
+        }
 
         // Fallback to exact count
         compositeKey.assign(key);
         compositeKey.push_back('.');
         compositeKey.append(extendedParams[0]); // count string already built
         val = getTranslationData(compositeKey, loc);
-        if (val) return interpolateArray(*val, extendedParams);
+        if (val) {
+            std::string result = interpolateArray(*val, extendedParams);
+            translationCache_[std::move(cacheKey)] = result;
+            return result;
+        }
 
         // Fallback: direct key (if it's a plain string with placeholders)
         val = getTranslationData(key, loc);
-        if (val) return interpolateArray(*val, extendedParams);
+        if (val) {
+            std::string result = interpolateArray(*val, extendedParams);
+            translationCache_[std::move(cacheKey)] = result;
+            return result;
+        }
     }
 
     return std::string(key);
@@ -1140,6 +1205,7 @@ void I18N::configure(const json& formats) {
         }
     }
     clearFormatCache();
+    clearTranslationCache();
 }
 
 void I18N::reset() {
@@ -1147,6 +1213,7 @@ void I18N::reset() {
     localesData.clear();
     formatConfigs.clear();
     formatCache_.clear();
+    translationCache_.clear();
 
     defaultConfig = FormatConfig{};
 

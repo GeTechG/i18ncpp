@@ -5,22 +5,23 @@
 See: .paul/PROJECT.md (updated 2026-04-09)
 
 **Core value:** C++ developers can localize their applications with translation, pluralization, and locale-aware formatting — without heavy dependencies like ICU.
-**Current focus:** v0.3 Deep Performance — Phase 4: Caching & Compile-time
+**Current focus:** v0.3 Deep Performance — Phase 5: Profiling & Validation
 
 ## Current Position
 
 Milestone: v0.3 Deep Performance
-Phase: 4 of 5 (Caching & Compile-time)
+Phase: 5 of 5 (Profiling & Validation)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-04-09 — Phase 3 complete, transitioned to Phase 4
+Last activity: 2026-04-09 — Phase 4 complete, transitioned to Phase 5
 
 Progress:
-- v0.3 Deep Performance: [██████░░░░] 60%
+- v0.3 Deep Performance: [████████░░] 80%
 - Phase 1: [██████████] 100% ✅
 - Phase 2: [██████████] 100% ✅
 - Phase 3: [██████████] 100% ✅
-- Phase 4: [░░░░░░░░░░] 0%
+- Phase 4: [██████████] 100% ✅
+- Phase 5: [░░░░░░░░░░] 0%
 
 ## Loop Position
 
@@ -49,13 +50,15 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - Composite key buffer pattern: assign+append reusable buffer instead of operator+ concatenation
 - Mutable member buffer pooling for interpolation (interpolateBuf_, interpolateBuf2_, extendedParamsBuf_)
 - Fold expression for argsToStrings: single-pass O(n) instead of recursive O(n^2)
+- Translation result cache: mutable unordered_map for tr/trPlural results, null-byte-separated cache keys
+- Constexpr FNV-1a hash utility: compile-time key hashing, deferred internal map usage to C++20
 
 ### Deferred Issues
 - Default DateTimeConfig.long_date uses %B specifier which is unhandled in formatDateWithConfig — only %F maps to full month name.
 - Transparent hash for zero-alloc map lookup deferred to C++20 migration.
 
 ### Git State
-Last commit: c2c85c2 (uncommitted changes from 03-01 APPLY)
+Last commit: 1cd0c84
 Branch: master
 Feature branches merged: none
 
@@ -65,8 +68,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Phase 3 complete, ready to plan Phase 4
-Next action: /paul:plan for Phase 4
+Stopped at: Phase 4 complete, ready to plan Phase 5
+Next action: /paul:plan for Phase 5
 Resume file: .paul/ROADMAP.md
 
 ---
