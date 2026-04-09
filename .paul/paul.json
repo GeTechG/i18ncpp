@@ -7,8 +7,8 @@
     "status": "in_progress"
   },
   "phase": {
-    "number": 2,
-    "name": "Zero-copy & Move Semantics",
+    "number": 3,
+    "name": "Allocation Optimization",
     "status": "not_started"
   },
   "loop": {
@@ -17,7 +17,7 @@
   },
   "timestamps": {
     "created_at": "2026-04-09T00:00:00Z",
-    "updated_at": "2026-04-09T12:20:00Z"
+    "updated_at": "2026-04-09T00:20:00Z"
   },
   "satellite": {
     "groom": true

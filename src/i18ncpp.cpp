@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <regex>
 #include <set>
+#include <unordered_set>
 #include <functional>
 #include <charconv>
 
@@ -46,7 +47,7 @@ void I18N::loadLocale(std::string_view locale, std::string_view filePath) {
         }
 
         localesData[localeStr].clear();
-        flattenJson("", data, localesData[localeStr]);
+        flattenJson("", std::move(data), localesData[localeStr]);
         clearFormatCache();
     } catch (const json::parse_error& e) {
         throw I18NError("Failed to parse JSON from file: " + std::string(filePath) + " - " + e.what());
@@ -90,9 +91,9 @@ void I18N::mergeLocale(std::string_view locale, std::string_view filePath) {
 
         // Flatten into temporary map and merge into existing
         std::unordered_map<std::string, std::string> tempFlat;
-        flattenJson("", data, tempFlat);
+        flattenJson("", std::move(data), tempFlat);
         for (auto& [k, v] : tempFlat) {
-            localesData[localeStr][k] = std::move(v);
+            localesData[localeStr][std::move(k)] = std::move(v);
         }
         clearFormatCache();
     } catch (const json::parse_error& e) {
@@ -140,10 +141,11 @@ void I18N::load(const json& data) {
 void I18N::setLocale(std::string_view locale) {
     std::string localeStr(locale);
     locales.clear();
-    locales.push_back(localeStr);
+    locales.push_back(std::move(localeStr));
 
-    if (formatConfigs.find(localeStr) != formatConfigs.end()) {
-        defaultConfig = formatConfigs[localeStr];
+    auto it = formatConfigs.find(locales[0]);
+    if (it != formatConfigs.end()) {
+        defaultConfig = it->second;
     }
     clearFormatCache();
 }
@@ -205,6 +207,40 @@ void I18N::flattenJson(const std::string& prefix, const json& node, std::unorder
                 }
             } else {
                 flattenJson(fullKey, it.value(), flatMap);
+            }
+        }
+    }
+}
+
+void I18N::flattenJson(const std::string& prefix, json&& node, std::unordered_map<std::string, std::string>& flatMap) {
+    for (auto it = node.begin(); it != node.end(); ++it) {
+        if (it.key() == "_formats") continue;
+
+        std::string fullKey = prefix.empty() ? it.key() : prefix + "." + it.key();
+
+        if (it.value().is_string()) {
+            flatMap[std::move(fullKey)] = std::move(it.value().get_ref<json::string_t&>());
+        } else if (it.value().is_array()) {
+            for (size_t i = 0; i < it.value().size(); ++i) {
+                auto& elem = it.value()[i];
+                if (elem.is_string()) {
+                    flatMap[fullKey + "." + std::to_string(i)] = std::move(elem.get_ref<json::string_t&>());
+                }
+            }
+        } else if (it.value().is_object()) {
+            bool isLeaf = true;
+            for (auto sub = it.value().begin(); sub != it.value().end(); ++sub) {
+                if (!sub.value().is_string()) {
+                    isLeaf = false;
+                    break;
+                }
+            }
+            if (isLeaf) {
+                for (auto sub = it.value().begin(); sub != it.value().end(); ++sub) {
+                    flatMap[fullKey + "." + sub.key()] = std::move(sub.value().get_ref<json::string_t&>());
+                }
+            } else {
+                flattenJson(fullKey, std::move(it.value()), flatMap);
             }
         }
     }
@@ -441,25 +477,25 @@ std::vector<std::string> I18N::getLocaleAncestry(std::string_view locale) const 
 }
 
 std::vector<std::string> I18N::getFallbacks(const std::vector<std::string>& locales) const {
-    std::unordered_map<std::string, bool> seen;
+    std::unordered_set<std::string> seen;
     std::vector<std::string> result;
-    result.reserve(locales.size() * 2 + 1); // Reserve extra memory
-    
+    result.reserve(locales.size() * 2 + 1);
+
     for (const auto& locale : locales) {
         auto ancestry = getLocaleAncestry(locale);
-        for (const auto& ancestor : ancestry) {
-            if (!seen[ancestor]) {
-                seen[ancestor] = true;
-                result.push_back(ancestor);
+        for (auto& ancestor : ancestry) {
+            if (seen.find(ancestor) == seen.end()) {
+                seen.insert(ancestor);
+                result.push_back(std::move(ancestor));
             }
         }
     }
-    
+
     // Add fallback locale if it's not empty and not already in the list
-    if (!fallbackLocale.empty() && !seen[fallbackLocale]) {
+    if (!fallbackLocale.empty() && seen.find(fallbackLocale) == seen.end()) {
         result.push_back(fallbackLocale);
     }
-    
+
     return result;
 }
 
@@ -561,7 +597,8 @@ std::string I18N::translate(std::string_view key, const json& params) {
     }
 
     std::vector<std::string> fallbacks = getFallbacks(searchLocales);
-    std::string keyStr(key);
+    std::string compositeKey;
+    compositeKey.reserve(key.size() + 12);
 
     for (const auto& loc : fallbacks) {
         // Direct lookup
@@ -575,24 +612,37 @@ std::string I18N::translate(std::string_view key, const json& params) {
             int count = params["count"].get<int>();
             std::string pluralForm = getPluralForm(loc, count);
 
-            val = getTranslationData(keyStr + "." + pluralForm, loc);
+            compositeKey.assign(key);
+            compositeKey.push_back('.');
+            compositeKey.append(pluralForm);
+            val = getTranslationData(compositeKey, loc);
             if (val) return interpolate(*val, params);
 
-            val = getTranslationData(keyStr + ".other", loc);
+            compositeKey.assign(key);
+            compositeKey.append(".other");
+            val = getTranslationData(compositeKey, loc);
             if (val) return interpolate(*val, params);
 
-            val = getTranslationData(keyStr + "." + std::to_string(count), loc);
+            compositeKey.assign(key);
+            compositeKey.push_back('.');
+            compositeKey.append(std::to_string(count));
+            val = getTranslationData(compositeKey, loc);
             if (val) return interpolate(*val, params);
         } else {
             // Variant path: try key.paramValue for each param
             for (auto it = params.begin(); it != params.end(); ++it) {
                 if (it.value().is_string()) {
-                    val = getTranslationData(keyStr + "." + it.value().get<std::string>(), loc);
+                    compositeKey.assign(key);
+                    compositeKey.push_back('.');
+                    compositeKey.append(it.value().get_ref<const json::string_t&>());
+                    val = getTranslationData(compositeKey, loc);
                     if (val) return interpolate(*val, params);
                 }
             }
             // Fallback to "other"
-            val = getTranslationData(keyStr + ".other", loc);
+            compositeKey.assign(key);
+            compositeKey.append(".other");
+            val = getTranslationData(compositeKey, loc);
             if (val) return interpolate(*val, params);
         }
     }
@@ -631,7 +681,8 @@ std::string I18N::tr(std::string_view key, const std::vector<std::string>& param
     }
 
     std::vector<std::string> fallbacks = getFallbacks(locales);
-    std::string keyStr(key);
+    std::string compositeKey;
+    compositeKey.reserve(key.size() + 8);
 
     for (const auto& loc : fallbacks) {
         const std::string* val = getTranslationData(key, loc);
@@ -639,7 +690,9 @@ std::string I18N::tr(std::string_view key, const std::vector<std::string>& param
             return interpolateArray(*val, params);
         }
         // Fallback: try key.other (for plural keys called without count)
-        val = getTranslationData(keyStr + ".other", loc);
+        compositeKey.assign(key);
+        compositeKey.append(".other");
+        val = getTranslationData(compositeKey, loc);
         if (val) {
             return interpolateArray(*val, params);
         }
@@ -667,7 +720,6 @@ std::string I18N::trPlural(std::string_view key, int count, const std::vector<st
     }
 
     std::vector<std::string> fallbacks = getFallbacks(locales);
-    std::string keyStr(key);
 
     // Build extended params with count as first element
     std::vector<std::string> extendedParams;
@@ -675,19 +727,30 @@ std::string I18N::trPlural(std::string_view key, int count, const std::vector<st
     extendedParams.push_back(std::to_string(count));
     extendedParams.insert(extendedParams.end(), params.begin(), params.end());
 
+    std::string compositeKey;
+    compositeKey.reserve(key.size() + 12);
+
     for (const auto& loc : fallbacks) {
         std::string pluralForm = getPluralForm(loc, count);
 
         // Try plural form: key.one, key.other, key.few, etc.
-        const std::string* val = getTranslationData(keyStr + "." + pluralForm, loc);
+        compositeKey.assign(key);
+        compositeKey.push_back('.');
+        compositeKey.append(pluralForm);
+        const std::string* val = getTranslationData(compositeKey, loc);
         if (val) return interpolateArray(*val, extendedParams);
 
         // Fallback to "other"
-        val = getTranslationData(keyStr + ".other", loc);
+        compositeKey.assign(key);
+        compositeKey.append(".other");
+        val = getTranslationData(compositeKey, loc);
         if (val) return interpolateArray(*val, extendedParams);
 
         // Fallback to exact count
-        val = getTranslationData(keyStr + "." + std::to_string(count), loc);
+        compositeKey.assign(key);
+        compositeKey.push_back('.');
+        compositeKey.append(extendedParams[0]); // count string already built
+        val = getTranslationData(compositeKey, loc);
         if (val) return interpolateArray(*val, extendedParams);
 
         // Fallback: direct key (if it's a plain string with placeholders)

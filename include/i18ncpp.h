@@ -194,6 +194,7 @@ private:
     std::string getPluralForm(std::string_view locale, int count) const;
 
     void flattenJson(const std::string& prefix, const json& node, std::unordered_map<std::string, std::string>& flatMap);
+    void flattenJson(const std::string& prefix, json&& node, std::unordered_map<std::string, std::string>& flatMap);
 
     std::vector<std::string> getLocaleAncestry(std::string_view locale) const;
     

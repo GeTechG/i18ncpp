@@ -35,10 +35,11 @@ C++ developers can localize their applications with translation, pluralization, 
 - Flat storage with O(1) key lookup (replaced nested JSON traversal) — Phase 2
 - Formatting result cache with automatic invalidation on locale/config change — Phase 3
 - Benchmark suite with 18 micro-benchmarks for baseline performance measurement — v0.3 Phase 1
+- Move semantics for JSON string extraction in data loading (flattenJson mutable overload) — v0.3 Phase 2
+- Composite key buffer reuse in lookup hot paths (tr, trPlural, translate) — v0.3 Phase 2
 
 ### Active (In Progress)
-- String view / zero-copy for key lookup and interpolation
-- Move semantics for JSON parsing, locale merge, internal structures
+- String view / zero-copy for key lookup (deferred: requires C++20 heterogeneous find)
 - Memory pooling for interpolation buffers
 - Small string optimization for short translations
 - Interpolation cache with invalidation
@@ -69,6 +70,8 @@ C++ developers can localize their applications with translation, pluralization, 
 | Flat unordered_map storage | O(1) lookup vs O(depth) JSON traversal; plural/variant forms as composite keys | 2026-04-09 | Active |
 | Leaf object heuristic | Objects with all-string values are plural/variant forms, not namespace containers | 2026-04-09 | Active |
 | Formatting cache (mutable) | Cache formatNumber/Price/Date results; invalidate on locale/config change | 2026-04-09 | Active |
+| Transparent hash deferred | C++17 unordered_map lacks heterogeneous find(); deferred to C++20 migration | 2026-04-09 | Deferred |
+| Dual flattenJson overloads | const for borrowed JSON (load), mutable for owned JSON (loadLocale/mergeLocale) | 2026-04-09 | Active |
 
 ## Success Metrics
 
@@ -89,4 +92,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after v0.3 Phase 1 (Benchmarks complete)*
+*Last updated: 2026-04-09 after v0.3 Phase 2 (Zero-copy & Move Semantics complete)*
