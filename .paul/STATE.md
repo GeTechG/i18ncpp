@@ -5,30 +5,31 @@
 See: .paul/PROJECT.md (updated 2026-04-09)
 
 **Core value:** C++ developers can localize their applications with translation, pluralization, and locale-aware formatting — without heavy dependencies like ICU.
-**Current focus:** v0.3 Deep Performance — MILESTONE COMPLETE
+**Current focus:** v0.3 Deep Performance — Phase 6: Regex Replacement (COMPLETE)
 
 ## Current Position
 
 Milestone: v0.3 Deep Performance
-Phase: 5 of 5 (Profiling & Validation) — Complete
-Plan: 05-01 complete
-Status: v0.3 milestone complete
-Last activity: 2026-04-09 — Phase 5 complete, v0.3 milestone done
+Phase: 6 of 6 (Regex Replacement) — COMPLETE
+Plan: 06-01 complete
+Status: UNIFY complete, phase transition required
+Last activity: 2026-04-09 — Phase 6 complete, all regex replaced with manual parsers
 
 Progress:
-- v0.3 Deep Performance: [██████████] 100% ✅
+- v0.3 Deep Performance: [██████████] 100%
 - Phase 1: [██████████] 100% ✅
 - Phase 2: [██████████] 100% ✅
 - Phase 3: [██████████] 100% ✅
 - Phase 4: [██████████] 100% ✅
 - Phase 5: [██████████] 100% ✅
+- Phase 6: [██████████] 100% ✅
 
 ## Loop Position
 
 Current loop state:
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ✓        ✓        ✓     [Loop complete — milestone done]
+  ✓        ✓        ✓     [Loop complete — phase transition required]
 ```
 
 ## Accumulated Context
@@ -52,14 +53,16 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - Mutable member buffer pooling for interpolation (interpolateBuf_, interpolateBuf2_, extendedParamsBuf_)
 - Fold expression for argsToStrings: single-pass O(n) instead of recursive O(n^2)
 - Translation result cache: mutable unordered_map for tr/trPlural results, null-byte-separated cache keys
+- Manual parsers replace all 4 std::regex patterns — `<regex>` dependency fully removed
+- Skip second interpolation pass (%<key>.fmt) when text has no %< pattern
+- translate() avoids vector copy in common case (no "locale" param override)
 
 ### Deferred Issues
 - Default DateTimeConfig.long_date uses %B specifier which is unhandled in formatDateWithConfig — only %F maps to full month name.
 - Transparent hash for zero-alloc map lookup deferred to C++20 migration.
-- InterpolateNamed remains regex-bound (~6740 ns/op) — custom `%{key}` parser could replace std::regex for ~100x improvement (future milestone).
 
 ### Git State
-Last commit: 4c6bfb5
+Last commit: 59ad548
 Branch: master
 Feature branches merged: none
 
@@ -69,9 +72,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: v0.3 milestone complete
-Next action: /paul:complete-milestone or /paul:discuss-milestone for next milestone
-Resume file: .paul/ROADMAP.md
+Stopped at: Phase 6 UNIFY complete, phase transition required
+Next action: Run phase transition (last phase in milestone)
+Resume file: .paul/phases/06-regex-replacement/06-01-SUMMARY.md
 
 ---
 *STATE.md — Updated after every significant action*

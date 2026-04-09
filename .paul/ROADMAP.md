@@ -6,9 +6,11 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 
 ## Current Milestone
 
-None — v0.3 complete, next milestone not yet defined.
+**v0.3 Deep Performance** (v0.3.0)
+Status: Complete
+Phases: 6 of 6 complete
 
-## Phases (v0.3)
+## Phases
 
 | Phase | Name | Plans | Status | Completed |
 |-------|------|-------|--------|-----------|
@@ -17,6 +19,7 @@ None — v0.3 complete, next milestone not yet defined.
 | 3 | Allocation Optimization | 1 (03-01) | Complete | 2026-04-09 |
 | 4 | Caching & Compile-time | 1 (04-01) | Complete | 2026-04-09 |
 | 5 | Profiling & Validation | 1 (05-01) | Complete | 2026-04-09 |
+| 6 | Regex Replacement | 1 (06-01) | Complete | 2026-04-09 |
 
 ## Phase Details
 
@@ -45,16 +48,12 @@ Plans: TBD (defined during /paul:plan)
 Focus: Re-run benchmarks, compare with Phase 1 baseline, identify and optimize remaining hot spots.
 Plans: TBD (defined during /paul:plan)
 
-## Completed Milestones
+### Phase 6: Regex Replacement
 
-### v0.3 Deep Performance (v0.3.0)
-Status: Complete
-Phases: 5 of 5 complete
-- Phase 1: Benchmarks (complete) — 18 micro-benchmarks, baseline captured
-- Phase 2: Zero-copy & Move Semantics (complete) — move semantics, composite key buffer reuse
-- Phase 3: Allocation Optimization (complete) — buffer pooling, fold expressions
-- Phase 4: Caching & Compile-time (complete) — translation result cache
-- Phase 5: Profiling & Validation (complete) — before/after comparison, 87-96% improvement confirmed
+Focus: Replace std::regex in named interpolation with a custom `%{key}` parser to eliminate the remaining bottleneck (~6740 ns/op).
+Plans: TBD (defined during /paul:plan)
+
+## Completed Milestones
 
 ### v0.2 Performance & Reliability (v0.2.0)
 Status: Complete
@@ -67,4 +66,4 @@ Phases: 3 of 3 complete
 Status: Complete (shipped)
 
 ---
-*Roadmap updated: 2026-04-09 — v0.3 milestone complete (all 5 phases done)*
+*Roadmap updated: 2026-04-09 — v0.3 Deep Performance milestone complete (all 6 phases)*

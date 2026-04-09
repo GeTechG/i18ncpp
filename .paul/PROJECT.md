@@ -41,6 +41,7 @@ C++ developers can localize their applications with translation, pluralization, 
 - O(n) argsToStrings via C++17 fold expression (replaced O(n^2) recursive insert-at-begin) — v0.3 Phase 3
 - Translation result cache for tr/trPlural with automatic invalidation on mutation — v0.3 Phase 4
 - Profiling & validation: all optimizations measured, 87-96% lookup/interpolation improvement confirmed — v0.3 Phase 5
+- Manual parsers replace all std::regex patterns; `<regex>` dependency removed; InterpolateNamed 6740→489 ns/op (93% faster) — v0.3 Phase 6
 
 ### Active (In Progress)
 - String view / zero-copy for key lookup (deferred: requires C++20 heterogeneous find)
@@ -75,13 +76,14 @@ C++ developers can localize their applications with translation, pluralization, 
 | Mutable buffer pooling | Reuse interpolation buffers as mutable members; clear+reserve instead of local construction | 2026-04-09 | Active |
 | Fold expression for variadics | Single-pass O(n) parameter pack expansion replaces recursive O(n^2) insert-at-begin | 2026-04-09 | Active |
 | Translation result cache | Cache tr/trPlural results keyed by null-byte-separated key+params; invalidate on all mutation paths | 2026-04-09 | Active |
+| Manual parsers over regex | Hand-written character scanners replace std::regex for interpolation; removes `<regex>` dependency entirely | 2026-04-09 | Active |
 
 ## Success Metrics
 
 | Metric | Target | Current | Status |
 |--------|--------|---------|--------|
 | Correctness | All translations resolve correctly | 82 tests passing | Complete |
-| Performance | Fast locale resolution and formatting | O(1) hash lookup + formatting cache + translation result cache | Complete |
+| Performance | Fast locale resolution and formatting | O(1) hash lookup + formatting cache + translation cache + manual parsers | Complete |
 | Benchmark baseline | Measure all hot paths before optimization | 18 benchmarks with before/after comparison | Complete |
 
 ## Tech Stack / Tools
@@ -95,4 +97,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after v0.3 Phase 5 (Profiling & Validation complete — v0.3 milestone done)*
+*Last updated: 2026-04-09 after v0.3 Phase 6 (Regex Replacement complete — v0.3 milestone complete)*

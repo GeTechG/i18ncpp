@@ -86,6 +86,35 @@
 
 ---
 
+## v0.3.0 Post-Regex-Removal
+
+*Captured: 2026-04-09, after Phase 6 (replace std::regex with manual parsers)*
+*Values are averages of 3 consecutive runs*
+
+### Lookup
+
+| Benchmark | ns/op |
+|-----------|-------|
+| TrSimpleKey | 20 |
+| TrNestedKey | 25 |
+| TrDeepNested | 26 |
+| TrMissingFallback | 22 |
+| TrPlural | 56 |
+| KeyExists | 180 |
+| KeyExistsMissing | 185 |
+
+### Interpolation
+
+| Benchmark | ns/op |
+|-----------|-------|
+| InterpolatePositional | 64 |
+| InterpolateTwoParams | 123 |
+| InterpolateNamed | 489 |
+| PluralWithParam | 93 |
+| NoPlaceholders | 26 |
+
+---
+
 ## Before/After Comparison
 
 ### Lookup
@@ -104,10 +133,10 @@
 
 | Benchmark | Baseline (ns/op) | Current (ns/op) | Change |
 |-----------|-------------------|-----------------|--------|
-| InterpolatePositional | 1545 | 65 | **-96%** |
-| InterpolateTwoParams | 2224 | 125 | **-94%** |
-| InterpolateNamed | 6775 | 6740 | -1% |
-| PluralWithParam | 2266 | 99 | **-96%** |
+| InterpolatePositional | 1545 | 64 | **-96%** |
+| InterpolateTwoParams | 2224 | 123 | **-94%** |
+| InterpolateNamed | 6775 | 489 | **-93%** |
+| PluralWithParam | 2266 | 93 | **-96%** |
 | NoPlaceholders | 214 | 26 | **-88%** |
 
 ### Formatting
@@ -133,9 +162,9 @@
 
 - **NoPlaceholders: 88% faster (214 -> 26 ns/op).** Translation cache short-circuits when no interpolation is needed.
 
-### Remaining Hot Spot
+### Regex Removal Impact (Phase 6)
 
-- **InterpolateNamed: 6740 ns/op (essentially unchanged).** Named interpolation with `%{key}` patterns still uses `std::regex`, which dominates the benchmark. The translation cache does not help here because the benchmark calls `interpolate()` directly, bypassing the cache. The regex engine is the bottleneck — eliminating it would require a custom parser (out of scope for v0.3).
+- **InterpolateNamed: 6740 → 489 ns/op (93% faster).** Replacing `std::regex` with hand-written character-by-character parsers eliminated the last major bottleneck. The `<regex>` header dependency is fully removed.
 
 ### No Change (Expected)
 
@@ -152,3 +181,4 @@
 | Mutable buffer pooling | 3 | InterpolatePositional/TwoParams: ~94-96% faster |
 | Fold expression argsToStrings | 3 | PluralWithParam: ~96% faster |
 | Translation result cache | 4 | TrSimpleKey/Plural/Fallback: ~89-96% faster |
+| Manual parsers (regex removal) | 6 | InterpolateNamed: ~93% faster |

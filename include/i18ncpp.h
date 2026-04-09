@@ -9,7 +9,6 @@
 #include <map>
 #include <unordered_map>
 #include <stdexcept>
-#include <regex>
 #include <ctime>
 #include <optional>
 #include <memory>
@@ -214,11 +213,6 @@ private:
     std::string formatDateWithConfig(std::string_view pattern, const std::tm* date, const DateTimeConfig& config) const;
     
     std::string separateThousand(std::string_view amount, std::string_view separator) const;
-
-    static const std::regex fieldPattern;      // %{key}
-    static const std::regex valuePattern;      // %<key>.fmt
-    static const std::regex indexPattern;      // {index}
-    static const std::regex emptyBracePattern; // {}
 
     template<typename T>
     std::string toString(const T& value) const {
