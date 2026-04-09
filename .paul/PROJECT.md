@@ -40,12 +40,13 @@ C++ developers can localize their applications with translation, pluralization, 
 - Mutable member buffer pooling for interpolation (interpolateBuf_, interpolateBuf2_, extendedParamsBuf_) — v0.3 Phase 3
 - O(n) argsToStrings via C++17 fold expression (replaced O(n^2) recursive insert-at-begin) — v0.3 Phase 3
 - Translation result cache for tr/trPlural with automatic invalidation on mutation — v0.3 Phase 4
+- Profiling & validation: all optimizations measured, 87-96% lookup/interpolation improvement confirmed — v0.3 Phase 5
 
 ### Active (In Progress)
 - String view / zero-copy for key lookup (deferred: requires C++20 heterogeneous find)
 
 ### Planned (Next)
-- Profiling & validation (re-run benchmarks, compare with baseline)
+- None (v0.3 complete)
 
 ### Out of Scope
 - ICU dependency
@@ -80,8 +81,8 @@ C++ developers can localize their applications with translation, pluralization, 
 | Metric | Target | Current | Status |
 |--------|--------|---------|--------|
 | Correctness | All translations resolve correctly | 82 tests passing | Complete |
-| Performance | Fast locale resolution and formatting | O(1) hash lookup + formatting cache + translation result cache | In Progress |
-| Benchmark baseline | Measure all hot paths before optimization | 18 benchmarks captured | Complete |
+| Performance | Fast locale resolution and formatting | O(1) hash lookup + formatting cache + translation result cache | Complete |
+| Benchmark baseline | Measure all hot paths before optimization | 18 benchmarks with before/after comparison | Complete |
 
 ## Tech Stack / Tools
 
@@ -94,4 +95,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after v0.3 Phase 4 (Caching & Compile-time complete)*
+*Last updated: 2026-04-09 after v0.3 Phase 5 (Profiling & Validation complete — v0.3 milestone done)*

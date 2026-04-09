@@ -6,11 +6,9 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 
 ## Current Milestone
 
-**v0.3 Deep Performance** (v0.3.0)
-Status: In Progress
-Phases: 4 of 5 complete
+None — v0.3 complete, next milestone not yet defined.
 
-## Phases
+## Phases (v0.3)
 
 | Phase | Name | Plans | Status | Completed |
 |-------|------|-------|--------|-----------|
@@ -18,7 +16,7 @@ Phases: 4 of 5 complete
 | 2 | Zero-copy & Move Semantics | 1 (02-01) | Complete | 2026-04-09 |
 | 3 | Allocation Optimization | 1 (03-01) | Complete | 2026-04-09 |
 | 4 | Caching & Compile-time | 1 (04-01) | Complete | 2026-04-09 |
-| 5 | Profiling & Validation | TBD | Not started | - |
+| 5 | Profiling & Validation | 1 (05-01) | Complete | 2026-04-09 |
 
 ## Phase Details
 
@@ -49,6 +47,15 @@ Plans: TBD (defined during /paul:plan)
 
 ## Completed Milestones
 
+### v0.3 Deep Performance (v0.3.0)
+Status: Complete
+Phases: 5 of 5 complete
+- Phase 1: Benchmarks (complete) — 18 micro-benchmarks, baseline captured
+- Phase 2: Zero-copy & Move Semantics (complete) — move semantics, composite key buffer reuse
+- Phase 3: Allocation Optimization (complete) — buffer pooling, fold expressions
+- Phase 4: Caching & Compile-time (complete) — translation result cache
+- Phase 5: Profiling & Validation (complete) — before/after comparison, 87-96% improvement confirmed
+
 ### v0.2 Performance & Reliability (v0.2.0)
 Status: Complete
 Phases: 3 of 3 complete
@@ -60,4 +67,4 @@ Phases: 3 of 3 complete
 Status: Complete (shipped)
 
 ---
-*Roadmap updated: 2026-04-09 — Phase 4 (Caching & Compile-time) complete*
+*Roadmap updated: 2026-04-09 — v0.3 milestone complete (all 5 phases done)*

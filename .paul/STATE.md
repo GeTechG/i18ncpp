@@ -5,30 +5,30 @@
 See: .paul/PROJECT.md (updated 2026-04-09)
 
 **Core value:** C++ developers can localize their applications with translation, pluralization, and locale-aware formatting — without heavy dependencies like ICU.
-**Current focus:** v0.3 Deep Performance — Phase 5: Profiling & Validation
+**Current focus:** v0.3 Deep Performance — MILESTONE COMPLETE
 
 ## Current Position
 
 Milestone: v0.3 Deep Performance
-Phase: 5 of 5 (Profiling & Validation)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-04-09 — Phase 4 complete, transitioned to Phase 5
+Phase: 5 of 5 (Profiling & Validation) — Complete
+Plan: 05-01 complete
+Status: v0.3 milestone complete
+Last activity: 2026-04-09 — Phase 5 complete, v0.3 milestone done
 
 Progress:
-- v0.3 Deep Performance: [████████░░] 80%
+- v0.3 Deep Performance: [██████████] 100% ✅
 - Phase 1: [██████████] 100% ✅
 - Phase 2: [██████████] 100% ✅
 - Phase 3: [██████████] 100% ✅
 - Phase 4: [██████████] 100% ✅
-- Phase 5: [░░░░░░░░░░] 0%
+- Phase 5: [██████████] 100% ✅
 
 ## Loop Position
 
 Current loop state:
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ○        ○        ○     [Ready for next PLAN]
+  ✓        ✓        ✓     [Loop complete — milestone done]
 ```
 
 ## Accumulated Context
@@ -44,7 +44,8 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - Formatting cache: mutable unordered_map for formatNumber/Price/Date results; invalidated on all locale/config mutation paths
 - Cache skips formatDate(nullptr) — current time is non-deterministic
 - Custom chrono-based benchmark harness (zero new dependencies)
-- Regex interpolation identified as #1 bottleneck (~6775 ns/op named, ~1545 ns/op positional)
+- Regex interpolation identified as #1 bottleneck (~6775 ns/op named, ~1545 ns/op positional) — positional resolved by caching, named unchanged
+- v0.3 profiling confirmed: lookup 87-96% faster, positional interpolation 94-96% faster, named interpolation unchanged (regex-bound)
 - Transparent hash deferred: C++17 unordered_map lacks heterogeneous find() — requires C++20
 - Dual flattenJson overloads: const for borrowed JSON, mutable for locally-parsed JSON (move semantics)
 - Composite key buffer pattern: assign+append reusable buffer instead of operator+ concatenation
@@ -55,6 +56,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 ### Deferred Issues
 - Default DateTimeConfig.long_date uses %B specifier which is unhandled in formatDateWithConfig — only %F maps to full month name.
 - Transparent hash for zero-alloc map lookup deferred to C++20 migration.
+- InterpolateNamed remains regex-bound (~6740 ns/op) — custom `%{key}` parser could replace std::regex for ~100x improvement (future milestone).
 
 ### Git State
 Last commit: 4c6bfb5
@@ -67,8 +69,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Phase 4 complete, ready to plan Phase 5
-Next action: /paul:plan for Phase 5
+Stopped at: v0.3 milestone complete
+Next action: /paul:complete-milestone or /paul:discuss-milestone for next milestone
 Resume file: .paul/ROADMAP.md
 
 ---
