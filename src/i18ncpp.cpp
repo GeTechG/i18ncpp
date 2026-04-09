@@ -8,7 +8,9 @@
 #include <set>
 #include <unordered_set>
 #include <functional>
+#include <array>
 #include <charconv>
+#include <format>
 
 namespace i18n {
 
@@ -526,31 +528,22 @@ std::vector<std::string> I18N::getFallbacks(const std::vector<std::string>& loca
 std::string I18N::getPluralForm(std::string_view locale, int count) const {
     std::string root = getLocaleRoot(locale);
     
-    // Implement plural rules for different languages
-    static const std::unordered_map<std::string, int> localeRules = {
-        // English and similar languages (1)
-        {"en", 1}, {"de", 1}, {"nl", 1}, {"sv", 1}, {"da", 1}, {"no", 1}, {"nb", 1}, 
-        {"nn", 1}, {"fo", 1}, {"es", 1}, {"pt", 1}, {"it", 1}, {"bg", 1}, {"el", 1}, 
-        {"fi", 1}, {"et", 1}, {"he", 1}, {"eo", 1},
-        
-        // Russian and similar Slavic languages (5)
-        {"ru", 5}, {"uk", 5}, {"be", 5}, {"hr", 5}, {"sr", 5}, {"bs", 5}, {"sh", 5},
-        
-        // Polish (21)
-        {"pl", 21},
-        
-        // Czech and Slovak (7)
-        {"cs", 7}, {"sk", 7},
-        
-        // French and similar (9)
-        {"fr", 9}, {"ff", 9}, {"kab", 9},
-        
-        // Arabic (3)
-        {"ar", 3}
-    };
-    
-    auto ruleIt = localeRules.find(root);
-    int rule = (ruleIt != localeRules.end()) ? ruleIt->second : 1; // default to English-like
+    // Plural rules lookup — constexpr sorted array, no heap allocation
+    struct LocaleRule { std::string_view locale; int rule; };
+    static constexpr std::array<LocaleRule, 32> localeRules = {{
+        {"ar", 3},  {"be", 5},  {"bg", 1},  {"bs", 5},  {"cs", 7},
+        {"da", 1},  {"de", 1},  {"el", 1},  {"en", 1},  {"eo", 1},
+        {"es", 1},  {"et", 1},  {"ff", 9},  {"fi", 1},  {"fo", 1},
+        {"fr", 9},  {"he", 1},  {"hr", 5},  {"it", 1},  {"kab", 9},
+        {"nb", 1},  {"nl", 1},  {"nn", 1},  {"no", 1},  {"pl", 21},
+        {"pt", 1},  {"ru", 5},  {"sh", 5},  {"sk", 7},  {"sr", 5},
+        {"sv", 1},  {"uk", 5},
+    }};
+
+    int rule = 1; // default to English-like
+    for (const auto& lr : localeRules) {
+        if (lr.locale == root) { rule = lr.rule; break; }
+    }
     
     switch (rule) {
         case 1: // English and similar
@@ -1067,6 +1060,11 @@ std::string I18N::formatDateWithConfig(std::string_view pattern, const std::tm* 
                         result.append(defaultConfig.short_day_names[timeinfo.tm_wday]);
                     }
                     break;
+                case 'B': // %B - Full name of the month (standard strftime alias)
+                    if (timeinfo.tm_mon >= 0 && timeinfo.tm_mon < static_cast<int>(defaultConfig.long_month_names.size())) {
+                        result.append(defaultConfig.long_month_names[timeinfo.tm_mon]);
+                    }
+                    break;
                 case 'b': // %b - Abbreviated name of the month
                     if (timeinfo.tm_mon >= 0 && timeinfo.tm_mon < static_cast<int>(defaultConfig.short_month_names.size())) {
                         result.append(defaultConfig.short_month_names[timeinfo.tm_mon]);
@@ -1101,7 +1099,7 @@ std::string I18N::formatDateWithConfig(std::string_view pattern, const std::tm* 
 }
 
 std::string I18N::formatNumber(double number) const {
-    std::string cacheKey = "n:" + std::to_string(number);
+    std::string cacheKey = std::format("n:{}", number);
     auto it = formatCache_.find(cacheKey);
     if (it != formatCache_.end()) {
         return it->second;
@@ -1112,7 +1110,7 @@ std::string I18N::formatNumber(double number) const {
 }
 
 std::string I18N::formatPrice(double amount) const {
-    std::string cacheKey = "p:" + std::to_string(amount);
+    std::string cacheKey = std::format("p:{}", amount);
     auto it = formatCache_.find(cacheKey);
     if (it != formatCache_.end()) {
         return it->second;
@@ -1127,10 +1125,7 @@ std::string I18N::formatDate(std::string_view pattern, const std::tm* date) cons
     if (!date) {
         return formatDateWithConfig(pattern, date, defaultConfig.date_time);
     }
-    std::string cacheKey = "d:" + std::string(pattern) + ":"
-        + std::to_string(date->tm_year) + ":" + std::to_string(date->tm_mon) + ":"
-        + std::to_string(date->tm_mday) + ":" + std::to_string(date->tm_hour) + ":"
-        + std::to_string(date->tm_min) + ":" + std::to_string(date->tm_sec);
+    std::string cacheKey = std::format("d:{}:{}:{}:{}:{}:{}:{}", pattern, date->tm_year, date->tm_mon, date->tm_mday, date->tm_hour, date->tm_min, date->tm_sec);
     auto it = formatCache_.find(cacheKey);
     if (it != formatCache_.end()) {
         return it->second;

@@ -5,26 +5,26 @@
 See: .paul/PROJECT.md (updated 2026-04-09)
 
 **Core value:** C++ developers can localize their applications with translation, pluralization, and locale-aware formatting — without heavy dependencies like ICU.
-**Current focus:** v0.4 Phase 3 — Format & Constexpr
+**Current focus:** v0.4 Phase 4 — API Modernization
 
 ## Current Position
 
 Milestone: v0.4 C++20 Modernization
-Phase: 3 of 4 (Format & Constexpr)
+Phase: 4 of 4 (API Modernization)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-04-09 — Phase 2 complete, transitioned to Phase 3
+Last activity: 2026-04-09 — Phase 3 complete, transitioned to Phase 4
 
 Progress:
-- v0.4 C++20 Modernization: [█████░░░░░] 50%
-- Phase 2: [██████████] 100%
+- v0.4 C++20 Modernization: [███████░░░] 75%
+- Phase 4: [░░░░░░░░░░] 0%
 
 ## Loop Position
 
 Current loop state:
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ○        ○        ○     [Ready for Phase 3 planning]
+  ○        ○        ○     [Ready for Phase 4 planning]
 ```
 
 ## Accumulated Context
@@ -50,12 +50,15 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - Manual parsers replace all 4 std::regex patterns — `<regex>` dependency fully removed
 - Skip second interpolation pass (%<key>.fmt) when text has no %< pattern
 - translate() avoids vector copy in common case (no "locale" param override)
+- std::format for formatCache_ key construction (replaces manual string concatenation)
+- Constexpr sorted array for plural rule locale lookup (replaces runtime unordered_map)
+- %B specifier added to formatDateWithConfig (maps to full month name, same as %F)
 
 ### Deferred Issues
-- Default DateTimeConfig.long_date uses %B specifier which is unhandled in formatDateWithConfig — only %F maps to full month name.
+None.
 
 ### Git State
-Last commit: b22e309
+Last commit: 5cca94c
 Branch: master
 Feature branches merged: none
 
@@ -65,8 +68,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Phase 2 complete, transitioned to Phase 3
-Next action: /paul:plan for Phase 3
+Stopped at: Phase 3 complete, ready to plan Phase 4
+Next action: /paul:plan for Phase 4
 Resume file: .paul/ROADMAP.md
 
 ---

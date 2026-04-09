@@ -44,6 +44,7 @@ C++ developers can localize their applications with translation, pluralization, 
 - Profiling & validation: all optimizations measured, 87-96% lookup/interpolation improvement confirmed — v0.3 Phase 5
 - Manual parsers replace all std::regex patterns; `<regex>` dependency removed; InterpolateNamed 6740→489 ns/op (93% faster) — v0.3 Phase 6
 - Transparent hash (StringHash/StringEqual) with zero-allocation string_view lookups on all unordered_maps — v0.4 Phase 2
+- std::format for cache key construction, constexpr plural rule lookup, %B date specifier fix — v0.4 Phase 3
 
 ### Active (In Progress)
 - None
@@ -80,6 +81,9 @@ C++ developers can localize their applications with translation, pluralization, 
 | Fold expression for variadics | Single-pass O(n) parameter pack expansion replaces recursive O(n^2) insert-at-begin | 2026-04-09 | Active |
 | Translation result cache | Cache tr/trPlural results keyed by null-byte-separated key+params; invalidate on all mutation paths | 2026-04-09 | Active |
 | Manual parsers over regex | Hand-written character scanners replace std::regex for interpolation; removes `<regex>` dependency entirely | 2026-04-09 | Active |
+| std::format for cache keys | Cleaner cache key construction; replaces manual string concatenation with std::to_string | 2026-04-09 | Active |
+| Constexpr plural rule lookup | static constexpr std::array replaces runtime unordered_map; eliminates heap allocation | 2026-04-09 | Active |
+| %B as %F alias | %B maps to full month name (standard strftime); fixes default long_date pattern | 2026-04-09 | Active |
 
 ## Success Metrics
 
@@ -100,4 +104,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after Phase 2 (Transparent Hash & Zero-Copy)*
+*Last updated: 2026-04-09 after Phase 3 (Format & Constexpr)*
