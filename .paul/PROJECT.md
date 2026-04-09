@@ -13,8 +13,8 @@ C++ developers can localize their applications with translation, pluralization, 
 | Attribute | Value |
 |-----------|-------|
 | Type | Application (C++ library) |
-| Version | 0.2.0 |
-| Status | Complete |
+| Version | 0.3.0-dev |
+| Status | In Progress |
 | Last Updated | 2026-04-09 |
 
 ## Requirements
@@ -34,12 +34,18 @@ C++ developers can localize their applications with translation, pluralization, 
 - Test coverage for locale management (merge, load-from-file, reset) — Phase 1
 - Flat storage with O(1) key lookup (replaced nested JSON traversal) — Phase 2
 - Formatting result cache with automatic invalidation on locale/config change — Phase 3
+- Benchmark suite with 18 micro-benchmarks for baseline performance measurement — v0.3 Phase 1
 
 ### Active (In Progress)
-- (none — v0.2 milestone complete)
+- String view / zero-copy for key lookup and interpolation
+- Move semantics for JSON parsing, locale merge, internal structures
+- Memory pooling for interpolation buffers
+- Small string optimization for short translations
+- Interpolation cache with invalidation
+- Compile-time constexpr key hashing
 
 ### Planned (Next)
-- (none — next milestone TBD)
+- Profiling & validation (re-run benchmarks, compare with baseline)
 
 ### Out of Scope
 - ICU dependency
@@ -69,7 +75,8 @@ C++ developers can localize their applications with translation, pluralization, 
 | Metric | Target | Current | Status |
 |--------|--------|---------|--------|
 | Correctness | All translations resolve correctly | 82 tests passing | Complete |
-| Performance | Fast locale resolution and formatting | O(1) hash lookup + formatting cache | Complete |
+| Performance | Fast locale resolution and formatting | O(1) hash lookup + formatting cache | In Progress |
+| Benchmark baseline | Measure all hot paths before optimization | 18 benchmarks captured | Complete |
 
 ## Tech Stack / Tools
 
@@ -82,4 +89,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after Phase 3 (v0.2 milestone complete)*
+*Last updated: 2026-04-09 after v0.3 Phase 1 (Benchmarks complete)*
