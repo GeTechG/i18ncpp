@@ -4,7 +4,7 @@ from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout, CMakeDeps
 
 class i18ncppRecipe(ConanFile):
     name = "i18ncpp"
-    version = "1.0"
+    version = "1.4"
     package_type = "library"
 
     # Binary configuration
