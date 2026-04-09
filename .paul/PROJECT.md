@@ -27,6 +27,7 @@ C++ developers can localize their applications with translation, pluralization, 
 - Nested translation keys (dot notation) and contextual variants
 
 ### Validated (Shipped)
+- C++20 build configuration with full backward compatibility — v0.4 Phase 1
 - Test coverage for translation basics (tr, nested keys, fallback, locale switching) — Phase 1
 - Test coverage for pluralization (en, ru, fr, pl, cs, ar rules) — Phase 1
 - Test coverage for interpolation (positional, unnamed, named, formatted) — Phase 1
@@ -65,13 +66,14 @@ C++ developers can localize their applications with translation, pluralization, 
 
 | Decision | Rationale | Date | Status |
 |----------|-----------|------|--------|
-| C++17 standard | Modern features without cutting-edge compiler requirements | 2026-04-09 | Active |
+| C++20 standard | Unlocks heterogeneous lookup, std::format, std::span, constexpr improvements | 2026-04-09 | Active |
 | nlohmann/json for JSON | Widely used, header-only, well-tested | 2026-04-09 | Active |
 | CMake + Conan | Standard C++ build and package management | 2026-04-09 | Active |
 | Flat unordered_map storage | O(1) lookup vs O(depth) JSON traversal; plural/variant forms as composite keys | 2026-04-09 | Active |
 | Leaf object heuristic | Objects with all-string values are plural/variant forms, not namespace containers | 2026-04-09 | Active |
 | Formatting cache (mutable) | Cache formatNumber/Price/Date results; invalidate on locale/config change | 2026-04-09 | Active |
-| Transparent hash deferred | C++17 unordered_map lacks heterogeneous find(); deferred to C++20 migration | 2026-04-09 | Deferred |
+| Transparent hash deferred | C++17 unordered_map lacks heterogeneous find(); deferred to C++20 migration | 2026-04-09 | Unblocked |
+| NumberConfig explicit constructor | C++20 aggregate init rules require explicit parameterized constructor for structs with user-declared special members | 2026-04-09 | Active |
 | Dual flattenJson overloads | const for borrowed JSON (load), mutable for owned JSON (loadLocale/mergeLocale) | 2026-04-09 | Active |
 | Mutable buffer pooling | Reuse interpolation buffers as mutable members; clear+reserve instead of local construction | 2026-04-09 | Active |
 | Fold expression for variadics | Single-pass O(n) parameter pack expansion replaces recursive O(n^2) insert-at-begin | 2026-04-09 | Active |
@@ -90,11 +92,11 @@ C++ developers can localize their applications with translation, pluralization, 
 
 | Layer | Technology | Notes |
 |-------|------------|-------|
-| Language | C++17 | Modern standard |
+| Language | C++20 | Migrated from C++17 in v0.4 Phase 1 |
 | Build | CMake | Cross-platform build |
 | Package Manager | Conan | Dependency management |
 | JSON | nlohmann/json | Only external dependency |
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 — v0.3 Deep Performance milestone complete*
+*Last updated: 2026-04-09 after Phase 1 (C++20 Migration)*

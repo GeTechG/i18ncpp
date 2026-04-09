@@ -56,6 +56,11 @@ struct NumberConfig {
     std::string negative_symbol = "-";
 
     NumberConfig() = default;
+    NumberConfig(std::string decimal, std::string thousand, int fract,
+                 std::string positive, std::string negative)
+        : decimal_symbol(std::move(decimal)), thousand_separator(std::move(thousand)),
+          fract_digits(fract), positive_symbol(std::move(positive)),
+          negative_symbol(std::move(negative)) {}
     NumberConfig(NumberConfig&&) noexcept = default;
     NumberConfig& operator=(NumberConfig&&) noexcept = default;
     NumberConfig(const NumberConfig&) = default;

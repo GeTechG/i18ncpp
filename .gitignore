@@ -43,3 +43,8 @@ CMakeUserPresets.json
 build/
 
 smiti18n
+
+### Claude Code ###
+.base/
+.mcp.json
+.claude/
