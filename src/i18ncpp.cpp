@@ -21,6 +21,14 @@ I18N::I18N() {
     reset();
 }
 
+void I18N::clearFormatCache() {
+    formatCache_.clear();
+}
+
+size_t I18N::formatCacheSize() const noexcept {
+    return formatCache_.size();
+}
+
 void I18N::loadLocale(std::string_view locale, std::string_view filePath) {
     std::ifstream fileStream(filePath.data());
     if (!fileStream.is_open()) {
@@ -39,6 +47,7 @@ void I18N::loadLocale(std::string_view locale, std::string_view filePath) {
 
         localesData[localeStr].clear();
         flattenJson("", data, localesData[localeStr]);
+        clearFormatCache();
     } catch (const json::parse_error& e) {
         throw I18NError("Failed to parse JSON from file: " + std::string(filePath) + " - " + e.what());
     }
@@ -85,6 +94,7 @@ void I18N::mergeLocale(std::string_view locale, std::string_view filePath) {
         for (auto& [k, v] : tempFlat) {
             localesData[localeStr][k] = std::move(v);
         }
+        clearFormatCache();
     } catch (const json::parse_error& e) {
         throw I18NError("Failed to parse JSON from file: " + std::string(filePath) + " - " + e.what());
     }
@@ -124,28 +134,32 @@ void I18N::load(const json& data) {
 
         flattenJson("", it.value(), localesData[localeStr]);
     }
+    clearFormatCache();
 }
 
 void I18N::setLocale(std::string_view locale) {
     std::string localeStr(locale);
     locales.clear();
     locales.push_back(localeStr);
-    
+
     if (formatConfigs.find(localeStr) != formatConfigs.end()) {
         defaultConfig = formatConfigs[localeStr];
     }
+    clearFormatCache();
 }
 
-void I18N::setLocale(const std::vector<std::string>& newLocales) {    
+void I18N::setLocale(const std::vector<std::string>& newLocales) {
     locales = newLocales;
-    
+
     if (!locales.empty() && formatConfigs.find(locales[0]) != formatConfigs.end()) {
         defaultConfig = formatConfigs[locales[0]];
     }
+    clearFormatCache();
 }
 
 void I18N::setFallbackLocale(std::string_view locale) {
     fallbackLocale = std::string(locale);
+    clearFormatCache();
 }
 
 std::string I18N::getLocale() const noexcept {
@@ -946,15 +960,43 @@ std::string I18N::formatDateWithConfig(std::string_view pattern, const std::tm* 
 }
 
 std::string I18N::formatNumber(double number) const {
-    return formatNumberWithConfig(number, defaultConfig.number);
+    std::string cacheKey = "n:" + std::to_string(number);
+    auto it = formatCache_.find(cacheKey);
+    if (it != formatCache_.end()) {
+        return it->second;
+    }
+    std::string result = formatNumberWithConfig(number, defaultConfig.number);
+    formatCache_[cacheKey] = result;
+    return result;
 }
 
 std::string I18N::formatPrice(double amount) const {
-    return formatPriceWithConfig(amount, defaultConfig.currency);
+    std::string cacheKey = "p:" + std::to_string(amount);
+    auto it = formatCache_.find(cacheKey);
+    if (it != formatCache_.end()) {
+        return it->second;
+    }
+    std::string result = formatPriceWithConfig(amount, defaultConfig.currency);
+    formatCache_[cacheKey] = result;
+    return result;
 }
 
 std::string I18N::formatDate(std::string_view pattern, const std::tm* date) const {
-    return formatDateWithConfig(pattern, date, defaultConfig.date_time);
+    // Skip caching when date is nullptr (uses current time, never repeats)
+    if (!date) {
+        return formatDateWithConfig(pattern, date, defaultConfig.date_time);
+    }
+    std::string cacheKey = "d:" + std::string(pattern) + ":"
+        + std::to_string(date->tm_year) + ":" + std::to_string(date->tm_mon) + ":"
+        + std::to_string(date->tm_mday) + ":" + std::to_string(date->tm_hour) + ":"
+        + std::to_string(date->tm_min) + ":" + std::to_string(date->tm_sec);
+    auto it = formatCache_.find(cacheKey);
+    if (it != formatCache_.end()) {
+        return it->second;
+    }
+    std::string result = formatDateWithConfig(pattern, date, defaultConfig.date_time);
+    formatCache_[cacheKey] = result;
+    return result;
 }
 
 const FormatConfig& I18N::getConfig() const noexcept {
@@ -1033,15 +1075,17 @@ void I18N::configure(const json& formats) {
             defaultConfig.long_day_names.push_back(day.get<std::string>());
         }
     }
+    clearFormatCache();
 }
 
 void I18N::reset() {
     locales.clear();
     localesData.clear();
     formatConfigs.clear();
-    
+    formatCache_.clear();
+
     defaultConfig = FormatConfig{};
-    
+
     fallbackLocale = "en";
 }
 

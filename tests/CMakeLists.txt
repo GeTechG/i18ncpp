@@ -54,9 +54,19 @@ target_compile_definitions(i18ncpp_locale_mgmt_tests PRIVATE
     FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fixtures"
 )
 
+add_executable(i18ncpp_format_cache_tests
+    test_format_cache.cpp
+)
+
+target_link_libraries(i18ncpp_format_cache_tests PRIVATE i18ncpp nlohmann_json GTest::gtest_main)
+target_compile_definitions(i18ncpp_format_cache_tests PRIVATE
+    FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fixtures"
+)
+
 include(GoogleTest)
 gtest_discover_tests(i18ncpp_tests)
 gtest_discover_tests(i18ncpp_plural_tests)
 gtest_discover_tests(i18ncpp_interpolation_tests)
 gtest_discover_tests(i18ncpp_formatting_tests)
 gtest_discover_tests(i18ncpp_locale_mgmt_tests)
+gtest_discover_tests(i18ncpp_format_cache_tests)

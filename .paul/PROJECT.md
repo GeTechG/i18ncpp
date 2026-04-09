@@ -13,8 +13,8 @@ C++ developers can localize their applications with translation, pluralization, 
 | Attribute | Value |
 |-----------|-------|
 | Type | Application (C++ library) |
-| Version | 0.2.0-dev |
-| Status | In Progress |
+| Version | 0.2.0 |
+| Status | Complete |
 | Last Updated | 2026-04-09 |
 
 ## Requirements
@@ -33,12 +33,13 @@ C++ developers can localize their applications with translation, pluralization, 
 - Test coverage for formatting (number, currency, date/time with named and custom patterns) — Phase 1
 - Test coverage for locale management (merge, load-from-file, reset) — Phase 1
 - Flat storage with O(1) key lookup (replaced nested JSON traversal) — Phase 2
+- Formatting result cache with automatic invalidation on locale/config change — Phase 3
 
 ### Active (In Progress)
-- Formatting cache (Phase 3)
+- (none — v0.2 milestone complete)
 
 ### Planned (Next)
-- (none — Phase 3 is next)
+- (none — next milestone TBD)
 
 ### Out of Scope
 - ICU dependency
@@ -61,13 +62,14 @@ C++ developers can localize their applications with translation, pluralization, 
 | CMake + Conan | Standard C++ build and package management | 2026-04-09 | Active |
 | Flat unordered_map storage | O(1) lookup vs O(depth) JSON traversal; plural/variant forms as composite keys | 2026-04-09 | Active |
 | Leaf object heuristic | Objects with all-string values are plural/variant forms, not namespace containers | 2026-04-09 | Active |
+| Formatting cache (mutable) | Cache formatNumber/Price/Date results; invalidate on locale/config change | 2026-04-09 | Active |
 
 ## Success Metrics
 
 | Metric | Target | Current | Status |
 |--------|--------|---------|--------|
-| Correctness | All translations resolve correctly | 75 tests passing | In progress |
-| Performance | Fast locale resolution and formatting | O(1) hash lookup (flat storage) | In progress |
+| Correctness | All translations resolve correctly | 82 tests passing | Complete |
+| Performance | Fast locale resolution and formatting | O(1) hash lookup + formatting cache | Complete |
 
 ## Tech Stack / Tools
 
@@ -80,4 +82,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after Phase 2*
+*Last updated: 2026-04-09 after Phase 3 (v0.2 milestone complete)*

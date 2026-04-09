@@ -7,8 +7,8 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 ## Current Milestone
 
 **v0.2 Performance & Reliability** (v0.2.0)
-Status: 🚧 In Progress
-Phases: 2 of 3 complete
+Status: ✅ Complete
+Phases: 3 of 3 complete
 
 ## Phases
 
@@ -16,7 +16,7 @@ Phases: 2 of 3 complete
 |-------|------|-------|--------|-----------|
 | 1 | Tests | 3 (01-translation, 02-plural+interp, 03-formatting) | ✅ Complete | 2026-04-09 |
 | 2 | Flat Storage | 1 (02-01-flatten-and-lookup) | ✅ Complete | 2026-04-09 |
-| 3 | Formatting Cache | TBD | Not started | - |
+| 3 | Formatting Cache | 1 (03-01-format-cache) | ✅ Complete | 2026-04-09 |
 
 ## Phase Details
 
@@ -33,7 +33,7 @@ Plans: 02-01 (flatten storage + O(1) lookup)
 ### Phase 3: Formatting Cache
 
 Focus: Cache interpolated/formatted strings to avoid repeated work per frame. Invalidate on locale change.
-Plans: TBD (defined during /paul:plan)
+Plans: 03-01 (format cache with invalidation on locale/config change)
 
 ## Completed Milestones
 
@@ -41,4 +41,4 @@ Plans: TBD (defined during /paul:plan)
 Status: ✅ Complete (shipped)
 
 ---
-*Roadmap updated: 2026-04-09 — Phase 2 complete*
+*Roadmap updated: 2026-04-09 — v0.2 milestone complete (all 3 phases)*

@@ -173,14 +173,18 @@ public:
 
     void reset();
 
+    size_t formatCacheSize() const noexcept;
+
 private:
     std::vector<std::string> locales;
     std::string fallbackLocale;
     std::unordered_map<std::string, std::unordered_map<std::string, std::string>> localesData;
     std::unordered_map<std::string, FormatConfig> formatConfigs;
     FormatConfig defaultConfig;
+    mutable std::unordered_map<std::string, std::string> formatCache_;
 
     // Helper functions
+    void clearFormatCache();
     const std::string* getTranslationData(std::string_view key, std::string_view locale) const;
     
     std::string interpolate(std::string_view text, const json& params) const;
