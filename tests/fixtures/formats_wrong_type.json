@@ -1,0 +1,9 @@
+{
+  "_formats": {
+    "currency": {
+      "symbol": ["not", "a", "string"],
+      "fract_digits": 2
+    }
+  },
+  "greeting": "hello"
+}

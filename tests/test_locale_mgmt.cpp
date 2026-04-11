@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include "i18ncpp.h"
+#include <fstream>
 #include <string>
+#include <string_view>
 
 static std::string fixturesDir() {
     return FIXTURES_DIR;
@@ -78,4 +80,52 @@ TEST_F(LocaleMgmtTest, ResetClearsAllState) {
 
     // Translations gone — tr returns the key itself
     EXPECT_EQ(i18n.tr("greeting"), "greeting");
+}
+
+// --- AC-1: configure() strong exception safety ---
+
+TEST_F(LocaleMgmtTest, ConfigureRollbackOnTypeError) {
+    i18n.loadLocale("en", (fixturesDir() + "/en.json").c_str());
+    i18n.setLocale("en");
+
+    // Prime the format cache
+    (void)i18n.formatPrice(123.45);
+    const size_t cachePre = i18n.formatCacheSize();
+    EXPECT_GT(cachePre, 0u);
+
+    const std::string prevSymbol = i18n.getConfig().currency.symbol;
+
+    // Load hostile fixture: _formats.currency.symbol is an array → json::type_error mid-configure
+    nlohmann::json hostile;
+    std::ifstream hostileStream(fixturesDir() + "/formats_wrong_type.json");
+    ASSERT_TRUE(hostileStream.is_open());
+    hostileStream >> hostile;
+
+    EXPECT_THROW(i18n.configure(hostile["_formats"]), ::i18n::I18NError);
+
+    // Rollback: defaultConfig unchanged
+    EXPECT_EQ(i18n.getConfig().currency.symbol, prevSymbol);
+    // Commit window never reached → cache unchanged and still valid against unchanged source
+    EXPECT_EQ(i18n.formatCacheSize(), cachePre);
+}
+
+// --- AC-2: loadLocale translates json::type_error to I18NError ---
+
+TEST_F(LocaleMgmtTest, LoadLocaleCatchesJsonTypeError) {
+    // Hostile fixture parses cleanly but type-errors inside configure() via loadLocale.
+    const std::string path = fixturesDir() + "/formats_wrong_type.json";
+    EXPECT_THROW(i18n.loadLocale("en", path), ::i18n::I18NError);
+}
+
+// --- AC-3: loadLocale accepts non-null-terminated string_view ---
+
+TEST_F(LocaleMgmtTest, LoadLocaleAcceptsNonNullTerminatedView) {
+    // Backing buffer: real path followed by garbage, no null in the view's range.
+    const std::string realPath = fixturesDir() + "/en.json";
+    std::string backing = realPath + "XXXXXXXX";
+    std::string_view sv(backing.data(), realPath.size());
+
+    EXPECT_NO_THROW(i18n.loadLocale("en", sv));
+    i18n.setLocale("en");
+    EXPECT_EQ(i18n.tr("greeting"), "Hello");
 }

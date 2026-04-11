@@ -1,14 +1,14 @@
 {
   "name": "i18ncpp",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "milestone": {
-    "name": "v0.4 C++20 Modernization",
-    "version": "0.4.0",
-    "status": "complete"
+    "name": "v0.4.1 Hardening & Infrastructure",
+    "version": "0.4.1",
+    "status": "in_progress"
   },
   "phase": {
-    "number": 4,
-    "name": "API Modernization",
+    "number": 1,
+    "name": "Boundary Correctness",
     "status": "complete"
   },
   "loop": {
@@ -17,7 +17,7 @@
   },
   "timestamps": {
     "created_at": "2026-04-09T00:00:00Z",
-    "updated_at": "2026-04-09T00:00:00Z"
+    "updated_at": "2026-04-11T00:30:00Z"
   },
   "satellite": {
     "groom": true

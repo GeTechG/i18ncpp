@@ -11,6 +11,7 @@
 #include <array>
 #include <charconv>
 #include <format>
+#include <filesystem>
 
 namespace i18n {
 
@@ -35,7 +36,7 @@ size_t I18N::translationCacheSize() const noexcept {
 }
 
 void I18N::loadLocale(std::string_view locale, std::string_view filePath) {
-    std::ifstream fileStream(filePath.data());
+    std::ifstream fileStream{std::filesystem::path(filePath)};
     if (!fileStream.is_open()) {
         throw I18NError("Failed to open locale file: " + std::string(filePath));
     }
@@ -54,7 +55,7 @@ void I18N::loadLocale(std::string_view locale, std::string_view filePath) {
         flattenJson("", std::move(data), localesData[localeStr]);
         clearFormatCache();
         clearTranslationCache();
-    } catch (const json::parse_error& e) {
+    } catch (const json::exception& e) {
         throw I18NError("Failed to parse JSON from file: " + std::string(filePath) + " - " + e.what());
     }
 }
@@ -80,7 +81,7 @@ void I18N::loadLocaleFromFile(std::string_view filePath) {
 }
 
 void I18N::mergeLocale(std::string_view locale, std::string_view filePath) {
-    std::ifstream fileStream(filePath.data());
+    std::ifstream fileStream{std::filesystem::path(filePath)};
     if (!fileStream.is_open()) {
         throw I18NError("Failed to open locale file: " + std::string(filePath));
     }
@@ -102,7 +103,7 @@ void I18N::mergeLocale(std::string_view locale, std::string_view filePath) {
         }
         clearFormatCache();
         clearTranslationCache();
-    } catch (const json::parse_error& e) {
+    } catch (const json::exception& e) {
         throw I18NError("Failed to parse JSON from file: " + std::string(filePath) + " - " + e.what());
     }
 }
@@ -128,18 +129,24 @@ void I18N::mergeLocaleFromFile(std::string_view filePath) {
 }
 
 void I18N::load(const json& data) {
-    // Top-level keys are locale identifiers
-    for (auto it = data.begin(); it != data.end(); ++it) {
-        if (!it.value().is_object()) continue;
+    try {
+        // Top-level keys are locale identifiers
+        for (auto it = data.begin(); it != data.end(); ++it) {
+            if (!it.value().is_object()) continue;
 
-        std::string localeStr = it.key();
+            std::string localeStr = it.key();
 
-        if (it.value().contains("_formats") && it.value()["_formats"].is_object()) {
-            configure(it.value()["_formats"]);
-            formatConfigs[localeStr] = defaultConfig;
+            if (it.value().contains("_formats") && it.value()["_formats"].is_object()) {
+                configure(it.value()["_formats"]);
+                formatConfigs[localeStr] = defaultConfig;
+            }
+
+            flattenJson("", it.value(), localesData[localeStr]);
         }
-
-        flattenJson("", it.value(), localesData[localeStr]);
+    } catch (const json::exception& e) {
+        clearFormatCache();
+        clearTranslationCache();
+        throw I18NError(std::string("load: ") + e.what());
     }
     clearFormatCache();
     clearTranslationCache();
@@ -1125,74 +1132,82 @@ void I18N::configure(const json& formats) {
     if (!formats.is_object()) {
         return;
     }
-    
-    if (formats.contains("currency") && formats["currency"].is_object()) {
-        const auto& currency = formats["currency"];
-        if (currency.contains("symbol")) defaultConfig.currency.symbol = currency["symbol"].get<std::string>();
-        if (currency.contains("name")) defaultConfig.currency.name = currency["name"].get<std::string>();
-        if (currency.contains("short_name")) defaultConfig.currency.short_name = currency["short_name"].get<std::string>();
-        if (currency.contains("decimal_symbol")) defaultConfig.currency.decimal_symbol = currency["decimal_symbol"].get<std::string>();
-        if (currency.contains("thousand_separator")) defaultConfig.currency.thousand_separator = currency["thousand_separator"].get<std::string>();
-        if (currency.contains("fract_digits")) defaultConfig.currency.fract_digits = currency["fract_digits"].get<int>();
-        if (currency.contains("positive_symbol")) defaultConfig.currency.positive_symbol = currency["positive_symbol"].get<std::string>();
-        if (currency.contains("negative_symbol")) defaultConfig.currency.negative_symbol = currency["negative_symbol"].get<std::string>();
-        if (currency.contains("positive_format")) defaultConfig.currency.positive_format = currency["positive_format"].get<std::string>();
-        if (currency.contains("negative_format")) defaultConfig.currency.negative_format = currency["negative_format"].get<std::string>();
-    }
-    
 
-    if (formats.contains("number") && formats["number"].is_object()) {
-        const auto& number = formats["number"];
-        if (number.contains("decimal_symbol")) defaultConfig.number.decimal_symbol = number["decimal_symbol"].get<std::string>();
-        if (number.contains("thousand_separator")) defaultConfig.number.thousand_separator = number["thousand_separator"].get<std::string>();
-        if (number.contains("fract_digits")) defaultConfig.number.fract_digits = number["fract_digits"].get<int>();
-        if (number.contains("positive_symbol")) defaultConfig.number.positive_symbol = number["positive_symbol"].get<std::string>();
-        if (number.contains("negative_symbol")) defaultConfig.number.negative_symbol = number["negative_symbol"].get<std::string>();
-    }
-    
+    FormatConfig tmp = defaultConfig;
 
-    if (formats.contains("date_time") && formats["date_time"].is_object()) {
-        const auto& date_time = formats["date_time"];
-        if (date_time.contains("long_time")) defaultConfig.date_time.long_time = date_time["long_time"].get<std::string>();
-        if (date_time.contains("short_time")) defaultConfig.date_time.short_time = date_time["short_time"].get<std::string>();
-        if (date_time.contains("long_date")) defaultConfig.date_time.long_date = date_time["long_date"].get<std::string>();
-        if (date_time.contains("short_date")) defaultConfig.date_time.short_date = date_time["short_date"].get<std::string>();
-        if (date_time.contains("long_date_time")) defaultConfig.date_time.long_date_time = date_time["long_date_time"].get<std::string>();
-        if (date_time.contains("short_date_time")) defaultConfig.date_time.short_date_time = date_time["short_date_time"].get<std::string>();
-    }
-    
+    try {
+        if (formats.contains("currency") && formats["currency"].is_object()) {
+            const auto& currency = formats["currency"];
+            if (currency.contains("symbol")) tmp.currency.symbol = currency["symbol"].get<std::string>();
+            if (currency.contains("name")) tmp.currency.name = currency["name"].get<std::string>();
+            if (currency.contains("short_name")) tmp.currency.short_name = currency["short_name"].get<std::string>();
+            if (currency.contains("decimal_symbol")) tmp.currency.decimal_symbol = currency["decimal_symbol"].get<std::string>();
+            if (currency.contains("thousand_separator")) tmp.currency.thousand_separator = currency["thousand_separator"].get<std::string>();
+            if (currency.contains("fract_digits")) tmp.currency.fract_digits = currency["fract_digits"].get<int>();
+            if (currency.contains("positive_symbol")) tmp.currency.positive_symbol = currency["positive_symbol"].get<std::string>();
+            if (currency.contains("negative_symbol")) tmp.currency.negative_symbol = currency["negative_symbol"].get<std::string>();
+            if (currency.contains("positive_format")) tmp.currency.positive_format = currency["positive_format"].get<std::string>();
+            if (currency.contains("negative_format")) tmp.currency.negative_format = currency["negative_format"].get<std::string>();
+        }
 
-    if (formats.contains("short_month_names") && formats["short_month_names"].is_array()) {
-        defaultConfig.short_month_names.clear();
-        defaultConfig.short_month_names.reserve(formats["short_month_names"].size());
-        for (const auto& month : formats["short_month_names"]) {
-            defaultConfig.short_month_names.push_back(month.get<std::string>());
+
+        if (formats.contains("number") && formats["number"].is_object()) {
+            const auto& number = formats["number"];
+            if (number.contains("decimal_symbol")) tmp.number.decimal_symbol = number["decimal_symbol"].get<std::string>();
+            if (number.contains("thousand_separator")) tmp.number.thousand_separator = number["thousand_separator"].get<std::string>();
+            if (number.contains("fract_digits")) tmp.number.fract_digits = number["fract_digits"].get<int>();
+            if (number.contains("positive_symbol")) tmp.number.positive_symbol = number["positive_symbol"].get<std::string>();
+            if (number.contains("negative_symbol")) tmp.number.negative_symbol = number["negative_symbol"].get<std::string>();
         }
-    }
-    
-    if (formats.contains("long_month_names") && formats["long_month_names"].is_array()) {
-        defaultConfig.long_month_names.clear();
-        defaultConfig.long_month_names.reserve(formats["long_month_names"].size());
-        for (const auto& month : formats["long_month_names"]) {
-            defaultConfig.long_month_names.push_back(month.get<std::string>());
+
+
+        if (formats.contains("date_time") && formats["date_time"].is_object()) {
+            const auto& date_time = formats["date_time"];
+            if (date_time.contains("long_time")) tmp.date_time.long_time = date_time["long_time"].get<std::string>();
+            if (date_time.contains("short_time")) tmp.date_time.short_time = date_time["short_time"].get<std::string>();
+            if (date_time.contains("long_date")) tmp.date_time.long_date = date_time["long_date"].get<std::string>();
+            if (date_time.contains("short_date")) tmp.date_time.short_date = date_time["short_date"].get<std::string>();
+            if (date_time.contains("long_date_time")) tmp.date_time.long_date_time = date_time["long_date_time"].get<std::string>();
+            if (date_time.contains("short_date_time")) tmp.date_time.short_date_time = date_time["short_date_time"].get<std::string>();
         }
-    }
-    
-    if (formats.contains("short_day_names") && formats["short_day_names"].is_array()) {
-        defaultConfig.short_day_names.clear();
-        defaultConfig.short_day_names.reserve(formats["short_day_names"].size());
-        for (const auto& day : formats["short_day_names"]) {
-            defaultConfig.short_day_names.push_back(day.get<std::string>());
+
+
+        if (formats.contains("short_month_names") && formats["short_month_names"].is_array()) {
+            tmp.short_month_names.clear();
+            tmp.short_month_names.reserve(formats["short_month_names"].size());
+            for (const auto& month : formats["short_month_names"]) {
+                tmp.short_month_names.push_back(month.get<std::string>());
+            }
         }
-    }
-    
-    if (formats.contains("long_day_names") && formats["long_day_names"].is_array()) {
-        defaultConfig.long_day_names.clear();
-        defaultConfig.long_day_names.reserve(formats["long_day_names"].size());
-        for (const auto& day : formats["long_day_names"]) {
-            defaultConfig.long_day_names.push_back(day.get<std::string>());
+
+        if (formats.contains("long_month_names") && formats["long_month_names"].is_array()) {
+            tmp.long_month_names.clear();
+            tmp.long_month_names.reserve(formats["long_month_names"].size());
+            for (const auto& month : formats["long_month_names"]) {
+                tmp.long_month_names.push_back(month.get<std::string>());
+            }
         }
+
+        if (formats.contains("short_day_names") && formats["short_day_names"].is_array()) {
+            tmp.short_day_names.clear();
+            tmp.short_day_names.reserve(formats["short_day_names"].size());
+            for (const auto& day : formats["short_day_names"]) {
+                tmp.short_day_names.push_back(day.get<std::string>());
+            }
+        }
+
+        if (formats.contains("long_day_names") && formats["long_day_names"].is_array()) {
+            tmp.long_day_names.clear();
+            tmp.long_day_names.reserve(formats["long_day_names"].size());
+            for (const auto& day : formats["long_day_names"]) {
+                tmp.long_day_names.push_back(day.get<std::string>());
+            }
+        }
+    } catch (const json::exception& e) {
+        throw I18NError(std::string("locale config: ") + e.what());
     }
+
+    defaultConfig = std::move(tmp);
     clearFormatCache();
     clearTranslationCache();
 }
