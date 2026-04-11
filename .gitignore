@@ -48,3 +48,5 @@ smiti18n
 .base/
 .mcp.json
 .claude/
+# AEGIS audit state (generated)
+.aegis/
