@@ -5,7 +5,7 @@
 See: .paul/PROJECT.md (updated 2026-04-09)
 
 **Core value:** C++ developers can localize their applications with translation, pluralization, and locale-aware formatting — without heavy dependencies like ICU.
-**Current focus:** v0.4.1 Hardening & Infrastructure — close AEGIS medium findings + install CI/CD & docs
+**Current focus:** No active milestone; repository is maintained without a CI workflow
 
 ## Current Position
 
@@ -13,7 +13,7 @@ Milestone: v0.4.1 Hardening & Infrastructure — **complete**
 Phase: — (no active phase)
 Plan: — (no active plan)
 Status: IDLE — milestone closed, ready for next /paul:milestone or /paul:plan for a new cycle
-Last activity: 2026-04-11 — v0.4.1 transition complete. ROADMAP archived, PROJECT evolved, dirty tree reconciled into 4 phase-aligned commits.
+Last activity: 2026-04-11 — CI workflow removed intentionally; project state updated to reflect manual verification only.
 
 Progress:
 - v0.4.1 Hardening & Infrastructure: [██████████] 100% COMPLETE
@@ -66,8 +66,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-11
-Stopped at: v0.4.1 milestone fully closed. Four phase-aligned commits landed (ef618f5 ROADMAP install → c6b46be tests → 2b02271 docs+CI → state sync commit pending). ROADMAP archived, PROJECT.md evolved, paul.json marked complete.
-Next action: /paul:milestone to pick next milestone (v0.4.2? v0.5?), or /paul:plan directly if scope is already known. Remaining dirty items outside milestone scope: .gitignore (.aegis/ entry), sonar-project.properties, .scannerwork/ — follow-up chore, not urgent.
+Stopped at: CI workflow removed by intent; live project metadata now reflects manual verification instead of GitHub Actions.
+Next action: /paul:milestone to pick the next milestone (v0.4.2? v0.5?), or /paul:plan directly if scope is already known.
 Resume file: (none — IDLE)
 
 ---

@@ -14,7 +14,7 @@ C++ developers can localize their applications with translation, pluralization, 
 |-----------|-------|
 | Type | Application (C++ library) |
 | Version | 0.4.1 |
-| Status | Stable (v0.4.1 shipped — hardening + CI) |
+| Status | Stable (v0.4.1 shipped — hardening complete, no CI workflow) |
 | Last Updated | 2026-04-11 |
 
 ## Requirements
@@ -54,7 +54,6 @@ C++ developers can localize their applications with translation, pluralization, 
 - Opt-in ThreadSanitizer regression test (I18N_ENABLE_TSAN, NOT MSVC, separate target) — v0.4.1 Phase 2
 - Hostile-input regression fixtures and tests (malformed JSON, non-object root, non-string leaves) — v0.4.1 Phase 3
 - CLAUDE.md project agent-onboarding doc (build, test, layout, constraints, conventions) — v0.4.1 Phase 4
-- GitHub Actions matrix CI (Ubuntu + Windows + macOS, Release, Conan-driven) with README badge — v0.4.1 Phase 4
 - README + BASELINE.md refreshed for C++20 + v0.4 API surface — v0.4.1 Phase 4
 
 ### Active (In Progress)
@@ -105,7 +104,7 @@ C++ developers can localize their applications with translation, pluralization, 
 | Correctness | All translations resolve correctly | 82 tests passing + cache-invariant + hostile-input regression suites | Complete |
 | Performance | Fast locale resolution and formatting | O(1) hash lookup + formatting cache + translation cache + manual parsers | Complete |
 | Benchmark baseline | Measure all hot paths before optimization | 18 benchmarks with before/after comparison | Complete |
-| CI coverage | Automated build + test on canonical toolchains | GitHub Actions matrix (Ubuntu + Windows + macOS, Release) | Complete |
+| Verification | Build/test run manually when needed | No automated CI workflow installed | Manual |
 | Thread-safety contract | Documented at class boundary | \warning docblock + TSan regression test (opt-in) | Complete |
 
 ## Tech Stack / Tools
@@ -119,4 +118,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-11 after Phase 4 (Infra & Docs) — v0.4.1 Hardening & Infrastructure milestone complete*
+*Last updated: 2026-04-11 after CI workflow removal and project-state sync*

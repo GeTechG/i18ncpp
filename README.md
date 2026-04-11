@@ -1,7 +1,5 @@
 # i18ncpp
 
-[![CI](https://github.com/GeTechG/i18ncpp/actions/workflows/ci.yml/badge.svg)](https://github.com/GeTechG/i18ncpp/actions/workflows/ci.yml)
-
 ## Overview
 
 i18ncpp provides a powerful and flexible solution for adding internationalization (i18n) capabilities to your C++ projects. It offers a wide range of features for translation, pluralization, number formatting, currency formatting, and date/time formatting.
