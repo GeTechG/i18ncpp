@@ -1,5 +1,7 @@
 # i18ncpp
 
+[![CI](https://github.com/GeTechG/i18ncpp/actions/workflows/ci.yml/badge.svg)](https://github.com/GeTechG/i18ncpp/actions/workflows/ci.yml)
+
 ## Overview
 
 i18ncpp provides a powerful and flexible solution for adding internationalization (i18n) capabilities to your C++ projects. It offers a wide range of features for translation, pluralization, number formatting, currency formatting, and date/time formatting.
@@ -39,7 +41,7 @@ cmake --install .
 
 ### Dependencies
 
-- C++17 or higher
+- C++20 or higher
 - [nlohmann/json](https://github.com/nlohmann/json) for JSON parsing
 
 ## Basic Usage
@@ -50,28 +52,31 @@ cmake --install .
 
 int main() {
     i18n::I18N i18n;
-    
+
     // Load translations from a JSON file
     i18n.loadLocaleFromFile("en.json");
     i18n.loadLocaleFromFile("fr.json");
-    
+
     // Set active locale
     i18n.setLocale("en");
-    
+
     // Basic translation
     std::cout << i18n.tr("greeting") << std::endl; // Hello!
-    
-    // Translation with parameter
-    std::cout << i18n.tr("welcome", "John") << std::endl; // Welcome, John!
-    
+
+    // Translation with parameters (variadic convenience)
+    std::cout << i18n.trv("welcome", "John") << std::endl; // Welcome, John!
+
+    // Or with an initializer_list
+    std::cout << i18n.tr("welcome", {"John"}) << std::endl; // Welcome, John!
+
     // Pluralization
     std::cout << i18n.trPlural("items", 1) << std::endl; // 1 item
     std::cout << i18n.trPlural("items", 5) << std::endl; // 5 items
-    
+
     // Change locale
     i18n.setLocale("fr");
     std::cout << i18n.tr("greeting") << std::endl; // Bonjour!
-    
+
     return 0;
 }
 ```
@@ -120,14 +125,19 @@ Translation files use JSON format. Here's an example:
 
 ### Translation Methods
 
-- `tr(key)`: Get a translation by key
-- `tr(key, param1)`: Get a translation with a single parameter
-- `tr(key, param1, param2, ...)`: Get a translation with multiple parameters
-- `tr(key, paramVector)`: Get a translation with a vector of parameters
-- `trv(key, ...args)`: Get a translation with variadic parameters
-- `trPlural(key, count)`: Get a pluralized translation
-- `trPlural(key, count, param1, ...)`: Get a pluralized translation with parameters
-- `trPluralv(key, count, ...args)`: Get a pluralized translation with variadic parameters
+All translation methods are `const` and accept parameters as a `std::span` or
+`std::initializer_list` of strings. Per-argument overloads were removed in v0.4
+in favor of the span/initializer_list/variadic form below.
+
+- `tr(key)`: Get a translation by key (no parameters)
+- `tr(key, std::span<const std::string>)`: Translation with parameters from any contiguous container
+- `tr(key, std::initializer_list<std::string>)`: Translation with an inline parameter list, e.g. `tr("welcome", {"John"})`
+- `trv(key, args...)`: Variadic convenience — stringifies each argument and forwards to `tr`
+- `trPlural(key, count)`: Pluralized translation with no parameters
+- `trPlural(key, count, std::span<const std::string>)`: Pluralized translation with parameters
+- `trPlural(key, count, std::initializer_list<std::string>)`: Pluralized translation with an inline parameter list
+- `trPluralv(key, count, args...)`: Variadic convenience for pluralized translations
+- `translate(key, json params)`: Legacy JSON-based interpolation (kept for named/formatted parameters)
 
 ### Formatting Methods
 

@@ -2,7 +2,7 @@
 
 **Compiler:** MSVC v143 (Visual Studio 2022)
 **Platform:** Windows 11 Pro x64 (10.0.22631)
-**Build:** Release, C++17
+**Build:** Release, C++20
 **Iterations:** 100,000 per benchmark (10% warm-up discarded)
 
 ---
@@ -112,6 +112,33 @@
 | InterpolateNamed | 489 |
 | PluralWithParam | 93 |
 | NoPlaceholders | 26 |
+
+---
+
+## v0.4.0 Status
+
+*No fresh capture taken for v0.4.*
+
+The v0.4 milestone (C++20 migration, transparent hashing on all `unordered_map`s,
+`std::format` for cache key construction, constexpr sorted array for plural rule
+lookup, `std::span` API surface, manual UTF-8 parsers) did **not** target the
+benchmarked hot paths. The translation cache, interpolation buffers, and formatting
+pipeline are unchanged in their fast path versus v0.3.0 Post-Regex-Removal above,
+so no re-measurement was required to close the milestone.
+
+Treat the v0.3.0 Post-Regex-Removal table as the current numbers for v0.4.0.
+
+If you want to validate locally:
+
+```bash
+cmake -S . -B build -DBUILD_BENCHMARKS=ON -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release --target i18ncpp_benchmarks
+./build/benchmarks/i18ncpp_benchmarks
+# MSVC multi-config: ./build/benchmarks/Release/i18ncpp_benchmarks.exe
+```
+
+If the numbers drift meaningfully from v0.3.0 Post-Regex-Removal, append a fresh
+table here (do not overwrite historical sections).
 
 ---
 
