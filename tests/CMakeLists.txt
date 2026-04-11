@@ -63,6 +63,24 @@ target_compile_definitions(i18ncpp_format_cache_tests PRIVATE
     FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fixtures"
 )
 
+add_executable(i18ncpp_cache_invariant_tests
+    test_cache_invariant.cpp
+)
+
+target_link_libraries(i18ncpp_cache_invariant_tests PRIVATE i18ncpp nlohmann_json GTest::gtest_main)
+target_compile_definitions(i18ncpp_cache_invariant_tests PRIVATE
+    FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fixtures"
+)
+
+add_executable(i18ncpp_hostile_input_tests
+    test_hostile_input.cpp
+)
+
+target_link_libraries(i18ncpp_hostile_input_tests PRIVATE i18ncpp nlohmann_json GTest::gtest_main)
+target_compile_definitions(i18ncpp_hostile_input_tests PRIVATE
+    FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fixtures"
+)
+
 include(GoogleTest)
 gtest_discover_tests(i18ncpp_tests)
 gtest_discover_tests(i18ncpp_plural_tests)
@@ -70,3 +88,25 @@ gtest_discover_tests(i18ncpp_interpolation_tests)
 gtest_discover_tests(i18ncpp_formatting_tests)
 gtest_discover_tests(i18ncpp_locale_mgmt_tests)
 gtest_discover_tests(i18ncpp_format_cache_tests)
+gtest_discover_tests(i18ncpp_cache_invariant_tests)
+gtest_discover_tests(i18ncpp_hostile_input_tests)
+
+# Opt-in ThreadSanitizer regression test for the supported
+# "one instance per thread" usage pattern. Disabled by default because TSan
+# is unsupported on MSVC and adds instrumented build overhead on other
+# toolchains. Enable on a TSan-capable toolchain with:
+#   cmake -S . -B build-tsan -DI18N_ENABLE_TSAN=ON
+option(I18N_ENABLE_TSAN "Build a ThreadSanitizer-instrumented test target" OFF)
+if(I18N_ENABLE_TSAN AND NOT MSVC)
+    add_executable(i18ncpp_thread_safety_tests
+        test_thread_safety.cpp
+    )
+    target_link_libraries(i18ncpp_thread_safety_tests PRIVATE i18ncpp nlohmann_json GTest::gtest_main)
+    target_compile_definitions(i18ncpp_thread_safety_tests PRIVATE
+        FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fixtures"
+        I18N_TSAN_BUILD
+    )
+    target_compile_options(i18ncpp_thread_safety_tests PRIVATE -fsanitize=thread -g)
+    target_link_options(i18ncpp_thread_safety_tests PRIVATE -fsanitize=thread)
+    gtest_discover_tests(i18ncpp_thread_safety_tests)
+endif()

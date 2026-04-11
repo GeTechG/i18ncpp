@@ -127,7 +127,27 @@ struct FormatConfig {
     FormatConfig& operator=(const FormatConfig&) = default;
 };
 
-// Main library class
+/// Internationalization library supporting translation, plural forms,
+/// number/currency/date formatting, and positional/named/formatted interpolation.
+///
+/// \warning **This class is NOT thread-safe, not even for `const` methods.**
+/// The following members are `mutable` and written on every call:
+///   - `formatCache_` / `translationCache_` — memoization caches, written on cache miss
+///   - `interpolateBuf_` / `interpolateBuf2_` / `extendedParamsBuf_` — scratch buffers,
+///     written on every interpolation call
+///
+/// Calling any method (including `tr()`, `trPlural()`, `format*()`) on a shared
+/// instance from multiple threads is a data race and will cause UB — typically
+/// segfault from corrupted `unordered_map` bucket pointers, not merely stale data.
+///
+/// Valid usage patterns:
+///   1. Create one `I18N` instance per thread.
+///   2. Share a single instance across threads, but guard every call (including
+///      `tr()`) with an external `std::mutex`.
+///
+/// `reset()`, `loadLocale()`, `mergeLocale()`, `load()`, `setLocale()`,
+/// `setFallbackLocale()`, and `configure()` are non-const mutators and likewise
+/// require external synchronization if the instance is shared.
 class I18N {
 public:
     I18N();
@@ -200,6 +220,9 @@ private:
     std::unordered_map<std::string, std::unordered_map<std::string, std::string, StringHash, StringEqual>, StringHash, StringEqual> localesData;
     std::unordered_map<std::string, FormatConfig, StringHash, StringEqual> formatConfigs;
     FormatConfig defaultConfig;
+    // NOTE: the following mutable members are written from const methods —
+    // see class-level thread-safety \warning above. Do not assume const methods
+    // are safe to call on a shared instance from multiple threads.
     mutable std::unordered_map<std::string, std::string, StringHash, StringEqual> formatCache_;
     mutable std::unordered_map<std::string, std::string, StringHash, StringEqual> translationCache_;
     mutable std::string interpolateBuf_;
