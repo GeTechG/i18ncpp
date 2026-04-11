@@ -6,7 +6,38 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 
 ## Current Milestone
 
-None — v0.4 complete. Next milestone TBD.
+**v0.4.1 Hardening & Infrastructure** (0.4.1)
+Status: 🚧 In Progress
+Phases: 0 of 4 complete
+
+Focus: Close AEGIS medium findings and install operational infrastructure (CI/CD, docs) before the next feature cycle.
+
+| Phase | Name | Plans | Status | Completed |
+|-------|------|-------|--------|-----------|
+| 1 | Boundary Correctness | TBD | Not started | - |
+| 2 | Concurrency & Invariants | TBD | Not started | - |
+| 3 | Adversarial Tests | TBD | Not started | - |
+| 4 | Infra & Docs | TBD | Not started | - |
+
+### Phase 1: Boundary Correctness
+
+Focus: P-001 (configure() transactional), P-002 (std::filesystem::path for ifstream)
+Plans: TBD (defined during /paul:plan)
+
+### Phase 2: Concurrency & Invariants
+
+Focus: P-004 (cache-invariant parametrized test) → P-003 (thread-safety contract + TSan test)
+Plans: TBD (defined during /paul:plan)
+
+### Phase 3: Adversarial Tests
+
+Focus: P-005 (hostile-input fixtures: malformed JSON, truncated, circular $ref, oversized keys)
+Plans: TBD (defined during /paul:plan)
+
+### Phase 4: Infra & Docs
+
+Focus: CLAUDE.md (TSK-004) → CI/CD GitHub Actions (TSK-005) → README + BASELINE.md refresh (TSK-006)
+Plans: TBD (defined during /paul:plan)
 
 ## Completed Milestones
 
@@ -59,4 +90,4 @@ Shipped — initial implementation.
 </details>
 
 ---
-*Roadmap updated: 2026-04-09 — v0.4 C++20 Modernization milestone complete*
+*Roadmap updated: 2026-04-11 — v0.4.1 Hardening & Infrastructure milestone created*
