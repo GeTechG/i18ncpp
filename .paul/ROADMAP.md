@@ -6,40 +6,34 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 
 ## Current Milestone
 
-**v0.4.1 Hardening & Infrastructure** (0.4.1)
-Status: 🚧 In Progress
-Phases: 0 of 4 complete
-
-Focus: Close AEGIS medium findings and install operational infrastructure (CI/CD, docs) before the next feature cycle.
-
-| Phase | Name | Plans | Status | Completed |
-|-------|------|-------|--------|-----------|
-| 1 | Boundary Correctness | TBD | Not started | - |
-| 2 | Concurrency & Invariants | TBD | Not started | - |
-| 3 | Adversarial Tests | TBD | Not started | - |
-| 4 | Infra & Docs | TBD | Not started | - |
-
-### Phase 1: Boundary Correctness
-
-Focus: P-001 (configure() transactional), P-002 (std::filesystem::path for ifstream)
-Plans: TBD (defined during /paul:plan)
-
-### Phase 2: Concurrency & Invariants
-
-Focus: P-004 (cache-invariant parametrized test) → P-003 (thread-safety contract + TSan test)
-Plans: TBD (defined during /paul:plan)
-
-### Phase 3: Adversarial Tests
-
-Focus: P-005 (hostile-input fixtures: malformed JSON, truncated, circular $ref, oversized keys)
-Plans: TBD (defined during /paul:plan)
-
-### Phase 4: Infra & Docs
-
-Focus: CLAUDE.md (TSK-004) → CI/CD GitHub Actions (TSK-005) → README + BASELINE.md refresh (TSK-006)
-Plans: TBD (defined during /paul:plan)
+None — v0.4.1 complete. Next milestone TBD.
 
 ## Completed Milestones
+
+<details>
+<summary>v0.4.1 Hardening & Infrastructure - 2026-04-11 (4 phases)</summary>
+
+Focus: Closed AEGIS medium findings and installed operational infrastructure (CI/CD, docs) before the next feature cycle.
+
+| Phase | Name | Plans | Completed |
+|-------|------|-------|-----------|
+| 1 | Boundary Correctness | 1 (01-01) | 2026-04-11 |
+| 2 | Concurrency & Invariants | 1 (02-01) | 2026-04-11 |
+| 3 | Adversarial Tests | 1 (03-01) | 2026-04-11 |
+| 4 | Infra & Docs | 2 (04-01, 04-02) | 2026-04-11 |
+
+Deliverables:
+- P-001: `configure()` copy-and-swap transactional commit (nothrow window)
+- P-002: `std::filesystem::path` used for `ifstream` to handle Unicode paths + non-null-terminated `string_view`
+- P-003: Thread-safety contract documented at class boundary (`\warning` docblock in `include/i18ncpp.h`), TSan regression test gated by `-DI18N_ENABLE_TSAN=ON`
+- P-004: Cache-clear invariant enforced by parametrized test enumerating all 8 public mutators (`tests/test_cache_invariant.cpp`)
+- P-005: Hostile-input fixtures (malformed JSON, non-object root, non-string leaves) + regression tests (`tests/test_hostile_input.cpp`, `tests/fixtures/hostile/`)
+- TSK-004: `CLAUDE.md` project agent-onboarding doc
+- TSK-005: `.github/workflows/ci.yml` matrix CI (Ubuntu + Windows + macOS, Release, Conan-driven) + README badge
+- TSK-006: `README.md` refreshed for C++20 + current `tr`/`trPlural` API surface, `benchmarks/BASELINE.md` header + v0.4.0 status section
+
+</details>
+
 
 <details>
 <summary>v0.4 C++20 Modernization - 2026-04-09 (4 phases)</summary>
@@ -90,4 +84,4 @@ Shipped — initial implementation.
 </details>
 
 ---
-*Roadmap updated: 2026-04-11 — v0.4.1 Hardening & Infrastructure milestone created*
+*Roadmap updated: 2026-04-11 — v0.4.1 Hardening & Infrastructure milestone complete*

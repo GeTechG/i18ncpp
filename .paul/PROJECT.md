@@ -13,9 +13,9 @@ C++ developers can localize their applications with translation, pluralization, 
 | Attribute | Value |
 |-----------|-------|
 | Type | Application (C++ library) |
-| Version | 0.4.0 |
-| Status | Stable (v0.4 shipped) |
-| Last Updated | 2026-04-09 |
+| Version | 0.4.1 |
+| Status | Stable (v0.4.1 shipped — hardening + CI) |
+| Last Updated | 2026-04-11 |
 
 ## Requirements
 
@@ -46,6 +46,16 @@ C++ developers can localize their applications with translation, pluralization, 
 - Transparent hash (StringHash/StringEqual) with zero-allocation string_view lookups on all unordered_maps — v0.4 Phase 2
 - std::format for cache key construction, constexpr plural rule lookup, %B date specifier fix — v0.4 Phase 3
 - std::span parameters for tr/trPlural, simplified overload set (10→6), initializer_list convenience — v0.4 Phase 4
+- configure() copy-and-swap transactional commit (nothrow window) — v0.4.1 Phase 1
+- JSON boundary catches widened from parse_error to json::exception in loadLocale/mergeLocale/load — v0.4.1 Phase 1
+- std::filesystem::path for ifstream construction (Unicode paths + non-null-terminated string_view) — v0.4.1 Phase 1
+- Thread-safety contract documented at class boundary (\warning docblock + mutable-member NOTE) — v0.4.1 Phase 2
+- Cache-clear invariant enforced by parametrized test enumerating all 8 public mutators — v0.4.1 Phase 2
+- Opt-in ThreadSanitizer regression test (I18N_ENABLE_TSAN, NOT MSVC, separate target) — v0.4.1 Phase 2
+- Hostile-input regression fixtures and tests (malformed JSON, non-object root, non-string leaves) — v0.4.1 Phase 3
+- CLAUDE.md project agent-onboarding doc (build, test, layout, constraints, conventions) — v0.4.1 Phase 4
+- GitHub Actions matrix CI (Ubuntu + Windows + macOS, Release, Conan-driven) with README badge — v0.4.1 Phase 4
+- README + BASELINE.md refreshed for C++20 + v0.4 API surface — v0.4.1 Phase 4
 
 ### Active (In Progress)
 - None
@@ -92,9 +102,11 @@ C++ developers can localize their applications with translation, pluralization, 
 
 | Metric | Target | Current | Status |
 |--------|--------|---------|--------|
-| Correctness | All translations resolve correctly | 82 tests passing | Complete |
+| Correctness | All translations resolve correctly | 82 tests passing + cache-invariant + hostile-input regression suites | Complete |
 | Performance | Fast locale resolution and formatting | O(1) hash lookup + formatting cache + translation cache + manual parsers | Complete |
 | Benchmark baseline | Measure all hot paths before optimization | 18 benchmarks with before/after comparison | Complete |
+| CI coverage | Automated build + test on canonical toolchains | GitHub Actions matrix (Ubuntu + Windows + macOS, Release) | Complete |
+| Thread-safety contract | Documented at class boundary | \warning docblock + TSan regression test (opt-in) | Complete |
 
 ## Tech Stack / Tools
 
@@ -107,4 +119,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-09 after Phase 4 (API Modernization) — v0.4 milestone complete*
+*Last updated: 2026-04-11 after Phase 4 (Infra & Docs) — v0.4.1 Hardening & Infrastructure milestone complete*

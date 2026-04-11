@@ -9,23 +9,21 @@ See: .paul/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Milestone: v0.4.1 Hardening & Infrastructure
-Phase: 2 of 4 (Concurrency & Invariants) — Not started
-Plan: none yet
-Status: Ready to plan Phase 2
-Last activity: 2026-04-11 — Phase 1 (Boundary Correctness) complete; transitioned to Phase 2
+Milestone: v0.4.1 Hardening & Infrastructure — **complete**
+Phase: — (no active phase)
+Plan: — (no active plan)
+Status: IDLE — milestone closed, ready for next /paul:milestone or /paul:plan for a new cycle
+Last activity: 2026-04-11 — v0.4.1 transition complete. ROADMAP archived, PROJECT evolved, dirty tree reconciled into 4 phase-aligned commits.
 
 Progress:
-- v0.4.1 Hardening & Infrastructure: [███░░░░░░░] 25%
-- Phase 1: [██████████] 100% — complete
-- Phase 2: [░░░░░░░░░░] 0%
+- v0.4.1 Hardening & Infrastructure: [██████████] 100% COMPLETE
 
 ## Loop Position
 
 Current loop state:
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ○        ○        ○     [IDLE - ready to plan Phase 2]
+  ○        ○        ○     [IDLE — v0.4.1 milestone closed]
 ```
 
 ## Accumulated Context
@@ -45,6 +43,12 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - **[Phase 1]** JSON boundary catches widened from `json::parse_error` to `json::exception` in loadLocale/mergeLocale/load(json) — only `I18NError` crosses the public API (AEGIS M2 closed)
 - **[Phase 1]** `std::ifstream{std::filesystem::path(filePath)}` (brace-init to avoid MSVC most-vexing parse) — handles non-null-terminated string_view and Windows Unicode paths
 - **[Phase 1]** `load(const json&)` clears caches on throw but does not roll back partial localesData merges — deferred to v0.5 per P-001 Change 4
+- **[Phase 2]** Cache-clear invariant enforced by parametrized test enumeration of all 8 public mutators (AEGIS P-004 closed, D-004: tests over generation counter)
+- **[Phase 2]** Thread-safety contract documented at class boundary via `\warning` docblock; resolution (1) "document the precondition" chosen over (2) thread_local or (3) internal sync (AEGIS P-003 closed)
+- **[Phase 2]** TSan regression test is a separate CMake-option-gated executable (`I18N_ENABLE_TSAN=OFF`, `NOT MSVC`) — sanitizer flags never contaminate the default build
+- **[Phase 2]** Project convention: one `add_executable` per test file — new test files get their own target, never share translation units
+- **[Phase 3]** AC-3 post-throw invariant is "unchanged" (not "cleared"): Phase 1's configure() copy-and-swap rollback preserves cache state on throw. Plan 03-01's AC-3 was patched during APPLY to snapshot pre-throw sizes and assert equality. Any future plan touching rollback assertions must classify "unchanged vs cleared" explicitly
+- **[Phase 3]** F-APP-002 resolved at test level: flattenJson silently skips non-string leaves (src/i18ncpp.cpp:202-228) — pinned by HostileInput.LeafIsIntSilentlySkipped
 
 ### Deferred Issues
 - load(const json&) partial-merge localesData rollback → v0.5 (cache invariant is preserved; merged locales from earlier iterations remain)
@@ -52,7 +56,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - AEGIS P-003 (thread-safety contract) and P-004 (cache-invariant parametrized test) → Phase 2
 
 ### Git State
-Last commit: 3cca973
+Last commit: 33e48c9 (Phase 1 Boundary Correctness)
 Branch: master
 Feature branches merged: none
 
@@ -62,9 +66,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-11
-Stopped at: Phase 1 (Boundary Correctness) complete, transitioned to Phase 2. PROJECT.md/ROADMAP.md intentionally deferred to milestone boundary (per user feedback_paul_state_redundancy).
-Next action: /paul:plan for Phase 2 (Concurrency & Invariants — P-004 cache-invariant parametrized test → P-003 thread-safety contract + TSan test)
-Resume file: .paul/ROADMAP.md (Phase 2 section)
+Stopped at: v0.4.1 milestone fully closed. Four phase-aligned commits landed (ef618f5 ROADMAP install → c6b46be tests → 2b02271 docs+CI → state sync commit pending). ROADMAP archived, PROJECT.md evolved, paul.json marked complete.
+Next action: /paul:milestone to pick next milestone (v0.4.2? v0.5?), or /paul:plan directly if scope is already known. Remaining dirty items outside milestone scope: .gitignore (.aegis/ entry), sonar-project.properties, .scannerwork/ — follow-up chore, not urgent.
+Resume file: (none — IDLE)
 
 ---
 *STATE.md — Updated after every significant action*
