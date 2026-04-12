@@ -141,6 +141,7 @@ void I18N::load(const json& data) {
                 formatConfigs[localeStr] = defaultConfig;
             }
 
+            localesData[localeStr].clear();
             flattenJson("", it.value(), localesData[localeStr]);
         }
     } catch (const json::exception& e) {
@@ -160,6 +161,8 @@ void I18N::setLocale(std::string_view locale) {
     auto it = formatConfigs.find(locales[0]);
     if (it != formatConfigs.end()) {
         defaultConfig = it->second;
+    } else {
+        defaultConfig = baselineConfig_;
     }
     clearFormatCache();
     clearTranslationCache();
@@ -170,6 +173,8 @@ void I18N::setLocale(const std::vector<std::string>& newLocales) {
 
     if (!locales.empty() && formatConfigs.find(locales[0]) != formatConfigs.end()) {
         defaultConfig = formatConfigs[locales[0]];
+    } else {
+        defaultConfig = baselineConfig_;
     }
     clearFormatCache();
     clearTranslationCache();
@@ -829,8 +834,16 @@ bool I18N::keyExists(std::string_view key) const noexcept {
     try {
         std::vector<std::string> fallbacks = getFallbacks(locales);
         
+        std::string otherKey;
+        otherKey.reserve(key.size() + 6);
+        otherKey.assign(key);
+        otherKey.append(".other");
+
         for (const auto& loc : fallbacks) {
             if (getTranslationData(key, loc) != nullptr) {
+                return true;
+            }
+            if (getTranslationData(otherKey, loc) != nullptr) {
                 return true;
             }
         }
@@ -1220,6 +1233,7 @@ void I18N::reset() {
     translationCache_.clear();
 
     defaultConfig = FormatConfig{};
+    baselineConfig_ = FormatConfig{};
 
     fallbackLocale = "en";
 }

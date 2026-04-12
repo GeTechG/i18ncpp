@@ -5,25 +5,25 @@
 See: .paul/PROJECT.md (updated 2026-04-09)
 
 **Core value:** C++ developers can localize their applications with translation, pluralization, and locale-aware formatting — without heavy dependencies like ICU.
-**Current focus:** No active milestone; repository is maintained without a CI workflow
+**Current focus:** v0.4.2 — close REVIEW-2026-04-11 findings and make the library buildable on GCC/Clang. No new features. No CI.
 
 ## Current Position
 
-Milestone: v0.4.1 Hardening & Infrastructure — **complete**
-Phase: — (no active phase)
-Plan: — (no active plan)
-Status: IDLE — milestone closed, ready for next /paul:milestone or /paul:plan for a new cycle
-Last activity: 2026-04-11 — CI workflow removed intentionally; project state updated to reflect manual verification only.
+Milestone: v0.4.2 Correctness & Portability — **in progress**
+Phase: 2 of 2 (Portability) — Not started
+Plan: —
+Status: Ready to plan Phase 2
+Last activity: 2026-04-13 — Phase 1 (Correctness) complete, transitioned to Phase 2
 
 Progress:
-- v0.4.1 Hardening & Infrastructure: [██████████] 100% COMPLETE
+- v0.4.2 Correctness & Portability: [█████░░░░░] 50%
 
 ## Loop Position
 
 Current loop state:
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ○        ○        ○     [IDLE — v0.4.1 milestone closed]
+  ○        ○        ○     [Ready for Phase 2 PLAN]
 ```
 
 ## Accumulated Context
@@ -49,6 +49,10 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - **[Phase 2]** Project convention: one `add_executable` per test file — new test files get their own target, never share translation units
 - **[Phase 3]** AC-3 post-throw invariant is "unchanged" (not "cleared"): Phase 1's configure() copy-and-swap rollback preserves cache state on throw. Plan 03-01's AC-3 was patched during APPLY to snapshot pre-throw sizes and assert equality. Any future plan touching rollback assertions must classify "unchanged vs cleared" explicitly
 - **[Phase 3]** F-APP-002 resolved at test level: flattenJson silently skips non-string leaves (src/i18ncpp.cpp:202-228) — pinned by HostileInput.LeafIsIntSilentlySkipped
+- **[v0.4.2 Phase 1]** load(json) replace semantics: localesData[locale].clear() before flattenJson — no stale keys survive reload (F1 closed)
+- **[v0.4.2 Phase 1]** baselineConfig_ member stores pristine FormatConfig; setLocale resets defaultConfig to it when locale has no per-locale config; reset() clears both (F2 closed)
+- **[v0.4.2 Phase 1]** toString template: bool branch before is_arithmetic_v check (bool is arithmetic in C++) — F3 closed
+- **[v0.4.2 Phase 1]** keyExists checks `key` AND `key.other` in each fallback locale — matches tr() .other fallback (F4 closed); full trPlural plural-form resolution intentionally NOT replicated
 
 ### Deferred Issues
 - load(const json&) partial-merge localesData rollback → v0.5 (cache invariant is preserved; merged locales from earlier iterations remain)
@@ -65,10 +69,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-11
-Stopped at: CI workflow removed by intent; live project metadata now reflects manual verification instead of GitHub Actions.
-Next action: /paul:milestone to pick the next milestone (v0.4.2? v0.5?), or /paul:plan directly if scope is already known.
-Resume file: (none — IDLE)
+Last session: 2026-04-13
+Stopped at: Phase 1 (Correctness) complete — 4/4 fixes shipped, 109/109 tests green
+Next action: /paul:plan for Phase 2 (Portability) — F5 localtime shim + std::format floor decision
+Resume file: .paul/ROADMAP.md
 
 ---
 *STATE.md — Updated after every significant action*

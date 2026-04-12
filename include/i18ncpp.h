@@ -220,6 +220,7 @@ private:
     std::unordered_map<std::string, std::unordered_map<std::string, std::string, StringHash, StringEqual>, StringHash, StringEqual> localesData;
     std::unordered_map<std::string, FormatConfig, StringHash, StringEqual> formatConfigs;
     FormatConfig defaultConfig;
+    FormatConfig baselineConfig_;
     // NOTE: the following mutable members are written from const methods —
     // see class-level thread-safety \warning above. Do not assume const methods
     // are safe to call on a shared instance from multiple threads.
@@ -260,10 +261,10 @@ private:
     std::string toString(const T& value) const {
         if constexpr (std::is_same_v<T, std::string> || std::is_same_v<T, std::string_view> || std::is_same_v<T, const char*>) {
             return std::string(value);
-        } else if constexpr (std::is_arithmetic_v<T>) {
-            return std::to_string(value);
         } else if constexpr (std::is_same_v<T, bool>) {
             return value ? "true" : "false";
+        } else if constexpr (std::is_arithmetic_v<T>) {
+            return std::to_string(value);
         } else {
             // For other types, add conversion as needed
             std::ostringstream oss;

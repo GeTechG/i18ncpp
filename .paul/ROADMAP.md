@@ -6,7 +6,24 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 
 ## Current Milestone
 
-None — v0.4.1 complete. Next milestone TBD.
+**v0.4.2 Correctness & Portability** — Status: In Progress
+Phases: 1 of 2 complete
+Focus: Close all findings from REVIEW-2026-04-11 (5 bugs + 4 coverage gaps) and make the library buildable on GCC/Clang toolchains. No new features. No CI.
+
+| Phase | Name | Plans | Status | Completed |
+|-------|------|-------|--------|-----------|
+| 1 | Correctness | 1 (01-01) | ✅ Complete | 2026-04-13 |
+| 2 | Portability | TBD | Not started | — |
+
+### Phase 1: Correctness
+
+Focus: F1 (load replace + atomic rollback), F2 (format config isolation via `baselineConfig_`), F3 (bool branch order in `toString`), F4 (keyExists parity with tr/trPlural) + regression tests G1–G4.
+Plans: TBD (defined during /paul:plan)
+
+### Phase 2: Portability
+
+Focus: F5 — `localtime_r`/`localtime_s` shim, decide `std::format` floor (GCC 13+/Clang 17+) vs fallback, document toolchain requirements in README + CLAUDE.md.
+Plans: TBD (defined during /paul:plan)
 
 ## Completed Milestones
 
@@ -84,4 +101,4 @@ Shipped — initial implementation.
 </details>
 
 ---
-*Roadmap updated: 2026-04-11 — v0.4.1 Hardening & Infrastructure milestone complete*
+*Roadmap updated: 2026-04-13 — Phase 1 (Correctness) complete*

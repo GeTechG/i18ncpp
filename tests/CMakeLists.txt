@@ -81,6 +81,42 @@ target_compile_definitions(i18ncpp_hostile_input_tests PRIVATE
     FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fixtures"
 )
 
+add_executable(i18ncpp_load_replace_tests
+    test_load_replace.cpp
+)
+
+target_link_libraries(i18ncpp_load_replace_tests PRIVATE i18ncpp nlohmann_json GTest::gtest_main)
+target_compile_definitions(i18ncpp_load_replace_tests PRIVATE
+    FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fixtures"
+)
+
+add_executable(i18ncpp_format_isolation_tests
+    test_format_isolation.cpp
+)
+
+target_link_libraries(i18ncpp_format_isolation_tests PRIVATE i18ncpp nlohmann_json GTest::gtest_main)
+target_compile_definitions(i18ncpp_format_isolation_tests PRIVATE
+    FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fixtures"
+)
+
+add_executable(i18ncpp_bool_conversion_tests
+    test_bool_conversion.cpp
+)
+
+target_link_libraries(i18ncpp_bool_conversion_tests PRIVATE i18ncpp nlohmann_json GTest::gtest_main)
+target_compile_definitions(i18ncpp_bool_conversion_tests PRIVATE
+    FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fixtures"
+)
+
+add_executable(i18ncpp_key_exists_tests
+    test_key_exists.cpp
+)
+
+target_link_libraries(i18ncpp_key_exists_tests PRIVATE i18ncpp nlohmann_json GTest::gtest_main)
+target_compile_definitions(i18ncpp_key_exists_tests PRIVATE
+    FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fixtures"
+)
+
 include(GoogleTest)
 gtest_discover_tests(i18ncpp_tests)
 gtest_discover_tests(i18ncpp_plural_tests)
@@ -90,6 +126,10 @@ gtest_discover_tests(i18ncpp_locale_mgmt_tests)
 gtest_discover_tests(i18ncpp_format_cache_tests)
 gtest_discover_tests(i18ncpp_cache_invariant_tests)
 gtest_discover_tests(i18ncpp_hostile_input_tests)
+gtest_discover_tests(i18ncpp_load_replace_tests)
+gtest_discover_tests(i18ncpp_format_isolation_tests)
+gtest_discover_tests(i18ncpp_bool_conversion_tests)
+gtest_discover_tests(i18ncpp_key_exists_tests)
 
 # Opt-in ThreadSanitizer regression test for the supported
 # "one instance per thread" usage pattern. Disabled by default because TSan

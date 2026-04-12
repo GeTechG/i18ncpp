@@ -55,6 +55,10 @@ C++ developers can localize their applications with translation, pluralization, 
 - Hostile-input regression fixtures and tests (malformed JSON, non-object root, non-string leaves) — v0.4.1 Phase 3
 - CLAUDE.md project agent-onboarding doc (build, test, layout, constraints, conventions) — v0.4.1 Phase 4
 - README + BASELINE.md refreshed for C++20 + v0.4 API surface — v0.4.1 Phase 4
+- load(json) replace semantics: locale map cleared before flatten, no stale keys — v0.4.2 Phase 1
+- Format config isolation via baselineConfig_: setLocale resets to defaults when locale has no _formats — v0.4.2 Phase 1
+- Bool serialization fix in trv/trPluralv: bool branch before arithmetic in toString template — v0.4.2 Phase 1
+- keyExists parity with tr: checks .other suffix to match plural base key resolution — v0.4.2 Phase 1
 
 ### Active (In Progress)
 - None
@@ -118,4 +122,4 @@ C++ developers can localize their applications with translation, pluralization, 
 | Testing | Google Test v1.14.0 | Via FetchContent |
 
 ---
-*Last updated: 2026-04-11 after CI workflow removal and project-state sync*
+*Last updated: 2026-04-13 after Phase 1 (Correctness) completion*

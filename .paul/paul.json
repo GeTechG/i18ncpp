@@ -1,15 +1,15 @@
 {
   "name": "i18ncpp",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "milestone": {
-    "name": "v0.4.1 Hardening & Infrastructure",
-    "version": "0.4.1",
-    "status": "complete"
+    "name": "v0.4.2 Correctness & Portability",
+    "version": "0.4.2",
+    "status": "in_progress"
   },
   "phase": {
-    "number": 4,
-    "name": "Infra & Docs",
-    "status": "complete"
+    "number": 2,
+    "name": "Portability",
+    "status": "not_started"
   },
   "loop": {
     "plan": null,
@@ -17,7 +17,7 @@
   },
   "timestamps": {
     "created_at": "2026-04-09T00:00:00Z",
-    "updated_at": "2026-04-11T04:00:00Z"
+    "updated_at": "2026-04-13T00:00:00Z"
   },
   "satellite": {
     "groom": true
