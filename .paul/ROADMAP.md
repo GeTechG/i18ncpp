@@ -6,26 +6,29 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 
 ## Current Milestone
 
-**v0.4.2 Correctness & Portability** — Status: Complete
-Phases: 2 of 2 complete
-Focus: Close all findings from REVIEW-2026-04-11 (5 bugs + 4 coverage gaps) and make the library buildable on GCC/Clang toolchains. No new features. No CI.
+**v0.4.2 Correctness & Portability** (v0.4.2)
+Status: ✅ Complete
+Completed: 2026-04-13
 
-| Phase | Name | Plans | Status | Completed |
-|-------|------|-------|--------|-----------|
-| 1 | Correctness | 1 (01-01) | ✅ Complete | 2026-04-13 |
-| 2 | Portability | 1 (02-01) | ✅ Complete | 2026-04-13 |
+## Next Milestone
 
-### Phase 1: Correctness
-
-Focus: F1 (load replace + atomic rollback), F2 (format config isolation via `baselineConfig_`), F3 (bool branch order in `toString`), F4 (keyExists parity with tr/trPlural) + regression tests G1–G4.
-Plans: TBD (defined during /paul:plan)
-
-### Phase 2: Portability
-
-Focus: F5 — `localtime_r`/`localtime_s` shim, decide `std::format` floor (GCC 13+/Clang 17+) vs fallback, document toolchain requirements in README + CLAUDE.md.
-Plans: TBD (defined during /paul:plan)
+Run `/paul:discuss-milestone` or `/paul:milestone` to define.
 
 ## Completed Milestones
+
+<details>
+<summary>v0.4.2 Correctness & Portability - 2026-04-13 (2 phases)</summary>
+
+Focus: Closed REVIEW-2026-04-11 findings (F1–F5 + G1–G4) and made the library source-level buildable on GCC/Clang.
+
+| Phase | Name | Plans | Completed |
+|-------|------|-------|-----------|
+| 1 | Correctness | 1 (01-01) | 2026-04-12 |
+| 2 | Portability | 1 (02-01) | 2026-04-13 |
+
+Archive: `.paul/milestones/v0.4.2-ROADMAP.md`
+
+</details>
 
 <details>
 <summary>v0.4.1 Hardening & Infrastructure - 2026-04-11 (4 phases)</summary>
@@ -101,4 +104,4 @@ Shipped — initial implementation.
 </details>
 
 ---
-*Roadmap updated: 2026-04-13 — Phase 1 (Correctness) complete*
+*Roadmap updated: 2026-04-13 — v0.4.2 milestone complete*

@@ -4,10 +4,48 @@ Completed milestone log for this project.
 
 | Milestone | Completed | Duration | Stats |
 |-----------|-----------|----------|-------|
+| v0.4.2 Correctness & Portability | 2026-04-13 | 2 days | 2 phases, 2 plans |
+| v0.4.1 Hardening & Infrastructure | 2026-04-11 | 1 day | 4 phases, 5 plans |
 | v0.4 C++20 Modernization | 2026-04-09 | 1 day | 4 phases, 4 plans |
 | v0.3 Deep Performance | 2026-04-09 | 1 day | 6 phases, 6 plans |
 | v0.2 Performance & Reliability | Pre-tracking | — | 3 phases, 5 plans |
 | v0.1 Initial Release | Pre-tracking | — | — |
+
+---
+
+## v0.4.2 Correctness & Portability
+
+**Completed:** 2026-04-13
+**Duration:** 2 days (2 phases)
+
+### Stats
+
+| Metric | Value |
+|--------|-------|
+| Phases | 2 |
+| Plans | 2 |
+| Files changed | ~10 |
+
+### Key Accomplishments
+
+- F1: `load(json)` replace semantics — locale map cleared before flatten; no stale keys survive reload
+- F2: Format config isolation via `baselineConfig_` — `setLocale` resets to pristine defaults when a locale has no `_formats`
+- F3: Bool serialization fix in `trv` / `trPluralv` — bool branch precedes `is_arithmetic_v` check in `toString`
+- F4: `keyExists` parity with `tr` — `.other` suffix probed during fallback resolution
+- G1–G4: 11 new regression tests pinning the correctness fixes
+- Portable localtime shim (`localtime_s` on Win32, `localtime_r` on POSIX)
+- `std::format` / `{fmt}` fallback via `i18n_fmt` namespace alias + CMake `FetchContent` probe
+- PROJECT.md dependency constraint amended to allow `{fmt}` as conditional fallback
+
+### Key Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| `baselineConfig_` member | Preserves pristine format defaults; `configure()` does not touch it |
+| `keyExists` checks only `.other` suffix | Matches `tr()` fallback; does NOT replicate full `trPlural` plural-form resolution |
+| `std::format` fallback over hard floor | Supports older toolchains without forcing a C++20 compiler bump |
+| `{fmt}` via CMake FetchContent, not Conan | Build-system-only concern; Conan users unaffected |
+| `i18n_fmt` namespace alias | Type-safe abstraction; no preprocessor hazards at call sites |
 
 ---
 

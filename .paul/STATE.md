@@ -5,25 +5,25 @@
 See: .paul/PROJECT.md (updated 2026-04-09)
 
 **Core value:** C++ developers can localize their applications with translation, pluralization, and locale-aware formatting — without heavy dependencies like ICU.
-**Current focus:** v0.4.2 — close REVIEW-2026-04-11 findings and make the library buildable on GCC/Clang. No new features. No CI.
+**Current focus:** v0.4.2 complete. Awaiting next milestone.
 
 ## Current Position
 
-Milestone: v0.4.2 Correctness & Portability — **complete**
-Phase: 2 of 2 (Portability) — Complete
-Plan: 02-01 complete
-Status: Loop closed; milestone v0.4.2 ready to transition
-Last activity: 2026-04-13 — UNIFY complete for Plan 02-01; phase 2 done; SUMMARY at .paul/phases/02-portability/02-01-SUMMARY.md
+Milestone: Awaiting next milestone
+Phase: None active
+Plan: None
+Status: Milestone v0.4.2 complete — ready for next
+Last activity: 2026-04-13 — v0.4.2 closed, archived, and tagged
 
 Progress:
-- v0.4.2 Correctness & Portability: [██████████] 100%
+- v0.4.2 Correctness & Portability: [██████████] 100% ✓
 
 ## Loop Position
 
 Current loop state:
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ✓        ✓        ✓     [Loop complete — Phase 2 done, milestone ready to close]
+  ○        ○        ○     [Milestone complete — ready for next]
 ```
 
 ## Accumulated Context
@@ -71,9 +71,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-13
-Stopped at: Phase 1 (Correctness) complete — 4/4 fixes shipped, 109/109 tests green
-Next action: /paul:plan for Phase 2 (Portability) — F5 localtime shim + std::format floor decision
-Resume file: .paul/ROADMAP.md
+Stopped at: Milestone v0.4.2 complete, tagged, archived
+Next action: /paul:discuss-milestone or /paul:milestone
+Resume file: .paul/MILESTONES.md
 
 ---
 *STATE.md — Updated after every significant action*
