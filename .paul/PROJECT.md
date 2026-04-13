@@ -13,9 +13,9 @@ C++ developers can localize their applications with translation, pluralization, 
 | Attribute | Value |
 |-----------|-------|
 | Type | Application (C++ library) |
-| Version | 0.4.1 |
-| Status | Stable (v0.4.1 shipped — hardening complete, no CI workflow) |
-| Last Updated | 2026-04-11 |
+| Version | 0.4.2 |
+| Status | Stable (v0.4.2 shipped — correctness + portability complete, no CI workflow) |
+| Last Updated | 2026-04-13 |
 
 ## Requirements
 
@@ -59,6 +59,8 @@ C++ developers can localize their applications with translation, pluralization, 
 - Format config isolation via baselineConfig_: setLocale resets to defaults when locale has no _formats — v0.4.2 Phase 1
 - Bool serialization fix in trv/trPluralv: bool branch before arithmetic in toString template — v0.4.2 Phase 1
 - keyExists parity with tr: checks .other suffix to match plural base key resolution — v0.4.2 Phase 1
+- Portable localtime shim (Win32 `localtime_s` / POSIX `localtime_r`) — v0.4.2 Phase 2
+- std::format / {fmt} fallback via `i18n_fmt` namespace alias, `{fmt}` auto-fetched by CMake FetchContent only when `std::format` unavailable — v0.4.2 Phase 2
 
 ### Active (In Progress)
 - None
@@ -73,7 +75,7 @@ C++ developers can localize their applications with translation, pluralization, 
 ## Constraints
 
 ### Technical Constraints
-- Only nlohmann/json as external dependency
+- Only nlohmann/json as required external dependency; {fmt} as conditional fallback when std::format is unavailable (auto-fetched via CMake FetchContent, never linked when std::format is present)
 
 ### Business Constraints
 - None identified

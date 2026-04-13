@@ -6,14 +6,14 @@ Build a lightweight, dependency-minimal C++ i18n library that provides translati
 
 ## Current Milestone
 
-**v0.4.2 Correctness & Portability** — Status: In Progress
-Phases: 1 of 2 complete
+**v0.4.2 Correctness & Portability** — Status: Complete
+Phases: 2 of 2 complete
 Focus: Close all findings from REVIEW-2026-04-11 (5 bugs + 4 coverage gaps) and make the library buildable on GCC/Clang toolchains. No new features. No CI.
 
 | Phase | Name | Plans | Status | Completed |
 |-------|------|-------|--------|-----------|
 | 1 | Correctness | 1 (01-01) | ✅ Complete | 2026-04-13 |
-| 2 | Portability | TBD | Not started | — |
+| 2 | Portability | 1 (02-01) | ✅ Complete | 2026-04-13 |
 
 ### Phase 1: Correctness
 

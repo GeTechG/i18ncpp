@@ -10,8 +10,21 @@
 #include <functional>
 #include <array>
 #include <charconv>
-#include <format>
 #include <filesystem>
+
+#if __has_include(<format>) && defined(__cpp_lib_format) && (__cpp_lib_format >= 201907L)
+    #include <format>
+    namespace i18n_fmt { using std::format; }
+#else
+    #include <fmt/format.h>
+    namespace i18n_fmt { using fmt::format; }
+#endif
+
+#if defined(_WIN32)
+    static inline void i18n_localtime(std::time_t t, std::tm& out) { localtime_s(&out, &t); }
+#else
+    static inline void i18n_localtime(std::time_t t, std::tm& out) { localtime_r(&t, &out); }
+#endif
 
 namespace i18n {
 
@@ -979,7 +992,7 @@ std::string I18N::formatDateWithConfig(std::string_view pattern, const std::tm* 
         timeinfo = *date;
     } else {
         std::time_t now = std::time(nullptr);
-        localtime_s(&timeinfo, &now);
+        i18n_localtime(now, timeinfo);
     }
     
     // Determine format pattern
@@ -1101,7 +1114,7 @@ std::string I18N::formatDateWithConfig(std::string_view pattern, const std::tm* 
 }
 
 std::string I18N::formatNumber(double number) const {
-    std::string cacheKey = std::format("n:{}", number);
+    std::string cacheKey = i18n_fmt::format("n:{}", number);
     auto it = formatCache_.find(cacheKey);
     if (it != formatCache_.end()) {
         return it->second;
@@ -1112,7 +1125,7 @@ std::string I18N::formatNumber(double number) const {
 }
 
 std::string I18N::formatPrice(double amount) const {
-    std::string cacheKey = std::format("p:{}", amount);
+    std::string cacheKey = i18n_fmt::format("p:{}", amount);
     auto it = formatCache_.find(cacheKey);
     if (it != formatCache_.end()) {
         return it->second;
@@ -1127,7 +1140,7 @@ std::string I18N::formatDate(std::string_view pattern, const std::tm* date) cons
     if (!date) {
         return formatDateWithConfig(pattern, date, defaultConfig.date_time);
     }
-    std::string cacheKey = std::format("d:{}:{}:{}:{}:{}:{}:{}", pattern, date->tm_year, date->tm_mon, date->tm_mday, date->tm_hour, date->tm_min, date->tm_sec);
+    std::string cacheKey = i18n_fmt::format("d:{}:{}:{}:{}:{}:{}:{}", pattern, date->tm_year, date->tm_mon, date->tm_mday, date->tm_hour, date->tm_min, date->tm_sec);
     auto it = formatCache_.find(cacheKey);
     if (it != formatCache_.end()) {
         return it->second;

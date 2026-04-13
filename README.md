@@ -42,6 +42,10 @@ cmake --install .
 - C++20 or higher
 - [nlohmann/json](https://github.com/nlohmann/json) for JSON parsing
 
+### Toolchain
+
+Uses `std::format` on toolchains that provide it (GCC 13+, Clang 17+, MSVC 19.29+ / Visual Studio 2022 17.0+). On older toolchains the build auto-fetches [{fmt}](https://github.com/fmtlib/fmt) via CMake `FetchContent` — no Conan change required, and `{fmt}` is never linked when `std::format` is available.
+
 ## Basic Usage
 
 ```cpp

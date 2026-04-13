@@ -46,7 +46,7 @@ Tests live in `tests/`. **Project convention (Phase 2):** one `add_executable` p
 ## Hard constraints
 
 - **C++20 required.** Migrated from C++17 in v0.4 Phase 1. Transparent hashing, `std::span`, `std::format`, and designated-initialized configs all depend on it.
-- **Only `nlohmann/json` as an external dependency.** No ICU. No new deps without explicit discussion.
+- **Only `nlohmann/json` as a *required* external dependency.** `{fmt}` is an *optional* fallback, fetched via CMake `FetchContent` only when the toolchain lacks `std::format` (pre-GCC 13 / pre-Clang 17 / pre-MSVC 19.29). No ICU. No other deps without explicit discussion.
 - **No `<regex>`.** Replaced by hand-written manual parsers in v0.3 Phase 6 — the regex dependency is gone and must stay gone (it was a ~14x slowdown on named interpolation).
 - **Thread safety: single-writer / single-reader only.** The class is not thread-safe, *not even for `const` methods* — `mutable` caches and scratch buffers are written on every call. The contract is documented at the class boundary in `include/i18ncpp.h` (`\warning` docblock). Sharing an instance across threads requires external synchronization.
 

@@ -9,21 +9,21 @@ See: .paul/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Milestone: v0.4.2 Correctness & Portability — **in progress**
-Phase: 2 of 2 (Portability) — Not started
-Plan: —
-Status: Ready to plan Phase 2
-Last activity: 2026-04-13 — Phase 1 (Correctness) complete, transitioned to Phase 2
+Milestone: v0.4.2 Correctness & Portability — **complete**
+Phase: 2 of 2 (Portability) — Complete
+Plan: 02-01 complete
+Status: Loop closed; milestone v0.4.2 ready to transition
+Last activity: 2026-04-13 — UNIFY complete for Plan 02-01; phase 2 done; SUMMARY at .paul/phases/02-portability/02-01-SUMMARY.md
 
 Progress:
-- v0.4.2 Correctness & Portability: [█████░░░░░] 50%
+- v0.4.2 Correctness & Portability: [██████████] 100%
 
 ## Loop Position
 
 Current loop state:
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ○        ○        ○     [Ready for Phase 2 PLAN]
+  ✓        ✓        ✓     [Loop complete — Phase 2 done, milestone ready to close]
 ```
 
 ## Accumulated Context
@@ -53,6 +53,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - **[v0.4.2 Phase 1]** baselineConfig_ member stores pristine FormatConfig; setLocale resets defaultConfig to it when locale has no per-locale config; reset() clears both (F2 closed)
 - **[v0.4.2 Phase 1]** toString template: bool branch before is_arithmetic_v check (bool is arithmetic in C++) — F3 closed
 - **[v0.4.2 Phase 1]** keyExists checks `key` AND `key.other` in each fallback locale — matches tr() .other fallback (F4 closed); full trPlural plural-form resolution intentionally NOT replicated
+- **[v0.4.2 Phase 2]** std::format policy: fmt-fallback chosen over hard floor. `i18n_fmt::format` wraps std::format or fmt::format via `__cpp_lib_format` feature probe; fmt fetched via CMake FetchContent only when needed; Conan unchanged. PROJECT.md constraint amended to allow fmt as conditional fallback
 
 ### Deferred Issues
 - load(const json&) partial-merge localesData rollback → v0.5 (cache invariant is preserved; merged locales from earlier iterations remain)
@@ -60,7 +61,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - AEGIS P-003 (thread-safety contract) and P-004 (cache-invariant parametrized test) → Phase 2
 
 ### Git State
-Last commit: 33e48c9 (Phase 1 Boundary Correctness)
+Last commit: 530f4be (v0.4.2 Phase 1 Correctness — F1–F4 + G1–G4)
 Branch: master
 Feature branches merged: none
 
